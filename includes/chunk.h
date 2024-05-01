@@ -26,16 +26,11 @@ void nextCellularAutomataGeneration(struct Grid grid, int livingValue, int deadV
 void randomGeneration(struct Grid grid, double chanceToLive, int livingValue, int deadValue, int conditionValue);
 void printGrid(struct Grid grid);
 void displayGridImages(struct Grid grid, float blockSize, Texture2D images[], Camera2D camera);
-void caveGeneration(struct Grid grid, double chanceToLive);
-void generateMinerals(struct Grid grid, struct ConwayRule rule, double chanceToLive, int mineralValue, int iteration);
 void nextConwayGeneration(struct Grid grid, struct ConwayRule rule, int livingValue, int deadValue);
 int equalGrids(struct Grid grid1, struct Grid grid2);
-void generateVine(struct Grid grid);
-void nextVineGeneration(struct Grid grid, struct Grid nextGrid, int x, int y);
-void nextWaterGeneration(struct Grid grid, struct Grid nextGrid, int x, int y);
-void updateTick(struct Grid grid, double *lastTime, double tickTime);
-void generateDirt(struct Grid grid, double chanceToLive, int mineralValue, int iteration);
+struct Grid listNeighbor(struct Grid grid, int x, int y);
+void cleanLava(struct Grid grid);
 
 
 
-#endif // CHUNK_H_INCLUDED
+#endif

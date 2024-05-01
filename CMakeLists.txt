@@ -5,7 +5,13 @@ set(CMAKE_C_STANDARD 11)
 add_executable(TerrariaLike
         main.c
         chunk.c
-        chunk.h)
+        includes/chunk.h
+        land.c
+        includes/land.h
+        includes/block.h
+        cave.c
+        includes/cave.h
+        block.c)
 
 include_directories(C:\\raylib\\raylib\\src)
 target_link_libraries(TerrariaLike C:\\raylib\\raylib\\src\\libraylib.a)

@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "chunk.h"
+#include "includes/chunk.h"
 #include "raylib.h"
+#include "includes/block.h"
 
 struct Grid createGrid(int width, int height) {
     struct Grid grid = {width, height, calloc(width * height, sizeof(int))};
@@ -101,7 +102,6 @@ void nextConwayGeneration(struct Grid grid, struct ConwayRule rule, int livingVa
 }
 
 void randomGeneration(struct Grid grid, double chanceToLive, int livingValue, int deadValue, int conditionValue) {
-    srand(time(NULL));
     for (int i = 0; i < grid.height * grid.width; i++) {
         if (grid.list[i] == conditionValue || conditionValue == -1) {
             if (((double) rand() / RAND_MAX) > chanceToLive) grid.list[i] = deadValue;
@@ -118,19 +118,6 @@ void printGrid(struct Grid grid) {
     }
 }
 
-void displayGridRectangle(struct Grid grid, int blockSize) {
-    for (int i = 0; i < grid.height; ++i) {
-        for (int j = 0; j < grid.width; ++j) {
-            Color color = WHITE;
-            if (getCell(grid, j, i) == 1) color = GRAY;
-            else if (getCell(grid, j, i) == 2) color = BLUE;
-            else if (getCell(grid, j, i) == 3) color = BLACK;
-            else if (getCell(grid, j, i) == 4) color = GREEN;
-            DrawRectangle(j * blockSize, i * blockSize, blockSize, blockSize, color);
-        }
-    }
-}
-
 void displayGridImages(struct Grid grid, float blockSize, Texture2D images[], Camera2D camera) {
     for (int i = 0; i < grid.height; ++i) {
         for (int j = 0; j < grid.width; ++j) {
@@ -142,7 +129,7 @@ void displayGridImages(struct Grid grid, float blockSize, Texture2D images[], Ca
                                    (Rectangle) {camera.target.x - camera.offset.x, camera.target.y - camera.offset.y,
                                                 GetScreenWidth(), GetScreenHeight()})) {
                 int cellValue = getCell(grid, j, i);
-                if (cellValue >= 1 && cellValue <= 10) {
+                if (cellValue >= 1 && cellValue <= 100) {
                     Rectangle sourceRec = {0.0f, 0.0f, (float) images[cellValue - 1].width,
                                            (float) images[cellValue - 1].height};
                     Vector2 origin = {0.0f, 0.0f};
@@ -176,104 +163,3 @@ void displayGridImages2(struct Grid grid, float blockSize, Texture2D images[], C
 }
 
 
-void caveGeneration(struct Grid grid, double chanceToLive) {
-    randomGeneration(grid, 0.5, 1, 0, -1);
-    for (int i = 0; i < 10; ++i) {
-        nextCellularAutomataGeneration(grid, 1, 0);
-    }
-    struct ConwayRule mineralRule = {1, 2, 3};
-    struct ConwayRule stoneGrassRule = {1, 2, 3};
-    struct ConwayRule stoneDirtRule = {1, 3, 2};
-
-    generateMinerals(grid, mineralRule, 0.04, 2, 1);
-    generateMinerals(grid, mineralRule, 0.07, 3, 1);
-    //generateDirt(grid, 0.02, 10, 15);
-    generateMinerals(grid, stoneGrassRule, 0.1, 5, 2);
-    generateMinerals(grid, stoneDirtRule, 0.02, 6, 3);
-    generateMinerals(grid, stoneDirtRule, 0.02, 8, 1);
-    generateMinerals(grid, stoneDirtRule, 0.03, 9, 1);
-    generateVine(grid);
-    randomGeneration(grid, 0.005, 7, 0, 0);
-}
-
-void generateMinerals(struct Grid grid, struct ConwayRule rule, double chanceToLive, int mineralValue, int iteration) {
-    randomGeneration(grid, chanceToLive, mineralValue, 1, 1);
-    for (int i = 0; i < iteration; ++i) {
-        nextConwayGeneration(grid, rule, mineralValue, 1);
-    }
-}
-
-void generateDirt(struct Grid grid, double chanceToLive, int mineralValue, int iteration) {
-    randomGeneration(grid, chanceToLive, mineralValue, 1, 1);
-    struct Grid neighbors = createNeighborsGrid(grid, mineralValue);
-    for (int a = 0; a < iteration; ++a) {
-        for (int i = 0; i < grid.height; ++i) {
-            for (int j = 0; j < grid.width; ++j) {
-                if (getCell(grid, j, i) == 1) {
-                    if (getCell(neighbors, j, i) >= 2) setCell(grid, j, i, mineralValue);
-                }
-                else if (getCell(grid, j, i) == mineralValue) {
-                    if (getCell(neighbors, j, i) < 2) setCell(grid, j, i, 1);
-                }
-            }
-        }
-    }
-
-    free(neighbors.list);
-}
-
-void generateVine(struct Grid grid) {
-    for (int i = 0; i < grid.height; ++i) {
-        for (int j = 0; j < grid.width; ++j) {
-            struct Grid neighbors = listNeighbor(grid, j, i);
-            struct Grid pattern = createGrid(3, 3);
-            setCell(pattern, 0, 0, 1);
-            setCell(pattern, 1, 0, 1);
-            setCell(pattern, 2, 0, 1);
-
-            if (equalGrids(neighbors, pattern) == 1 && j % 2 == 0) setCell(grid, j, i, 4);
-
-            free(neighbors.list);
-            free(pattern.list);
-        }
-    }
-}
-
-void nextVineGeneration(struct Grid grid, struct Grid nextGrid, int x, int y) {
-    if (getCell(grid, x, y) == 4) {
-        if (getCell(grid, x, y - 1) == 0) setCell(nextGrid, x, y, -1);
-        else if (getCell(grid, x, y + 1) == 0) setCell(nextGrid, x, y + 1, 4);
-    }
-}
-
-void nextWaterGeneration(struct Grid grid, struct Grid nextGrid, int x, int y) {
-    if (getCell(grid, x, y + 1) != 7) {
-        if (countNeighbor(grid, 7, x, y) < 2 && countNeighbor(grid, 1, x, y ) < 2 && getCell(grid, x, y-1) != 7) setCell(nextGrid, x, y, -1);
-        if (getCell(grid, x, y + 1) == 0) setCell(nextGrid, x, y + 1, 7);
-        else {
-            if (getCell(grid, x + 1, y) <= 0) setCell(nextGrid, x + 1, y, 7);
-            if (getCell(grid, x - 1, y) <= 0) setCell(nextGrid, x - 1, y, 7);
-        }
-    }
-}
-
-void updateTick(struct Grid grid, double *lastTime, double tickTime) {
-    if (GetTime() - *lastTime >= tickTime) {
-        struct Grid nextGrid = createGrid(grid.width, grid.height);
-        for (int i = 0; i < grid.height; ++i) {
-            for (int j = 0; j < grid.width; ++j) {
-                if (getCell(grid, j, i) == 4) nextVineGeneration(grid, nextGrid, j, i);
-                else if (getCell(grid, j, i) == 7) nextWaterGeneration(grid, nextGrid, j, i);
-            }
-        }
-        for (int i = 0; i < grid.height; ++i) {
-            for (int j = 0; j < grid.width; ++j) {
-                if (getCell(nextGrid, j, i) == 4) setCell(grid, j, i, 4);
-                else if (getCell(nextGrid, j, i) == 7) setCell(grid, j, i, 7);
-                else if (getCell(nextGrid, j, i) == -1) setCell(grid, j, i, 0);
-            }
-        }
-        free(nextGrid.list);
-        *lastTime = GetTime();
-    }
-}
