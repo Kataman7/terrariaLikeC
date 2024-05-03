@@ -114,7 +114,7 @@ void caveDecoration(struct Grid grid) {
 void cleanLava(struct Grid grid) {
     for (int i = 0; i < grid.height; ++i) {
         for (int j = 0; j < grid.width; ++j) {
-            if (getCell(grid, j, i) == LEAVES_ORANGE && countNeighbor(grid, VOID, j, i) > 7)
+            if (getCell(grid, j, i) == LEAVES_ORANGE && countNeighbor(grid, STONE, j, i) < 1)
                 setCell(grid, j, i, VOID);
         }
     }

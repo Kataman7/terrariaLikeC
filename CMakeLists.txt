@@ -11,7 +11,9 @@ add_executable(TerrariaLike
         includes/block.h
         cave.c
         includes/cave.h
-        block.c)
+        block.c
+        structure.c
+        includes/structure.h)
 
 include_directories(C:\\raylib\\raylib\\src)
 target_link_libraries(TerrariaLike C:\\raylib\\raylib\\src\\libraylib.a)

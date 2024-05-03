@@ -26,6 +26,9 @@ int main() {
     InitWindow(screenWidth, screenHeight, "TerrariaLike");
 
     Texture2D* textures = createTexture();
+    //UpdateTexture(textures[VINE - 1], "texture/vine.png");
+    //UpdateTexture(textures[LEAVES_ORANGE - 1], "texture/lava.png");
+
 
     Camera2D camera = { 0 };
     camera.target = (Vector2){ ((float)grid.width/2)*(float)blockSize, ((float)grid.height/2)*(float)blockSize };
@@ -38,13 +41,17 @@ int main() {
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
+
         float zoomSpeed = 0.1f;
         float newZoom = camera.zoom - GetMouseWheelMove() * zoomSpeed;
         if (newZoom > 0.1f && newZoom < 5.0f && newZoom != camera.zoom) {
             camera.zoom = newZoom;
         }
 
-        float speed = (float) blockSize * GetFrameTime() * 15;
+        float speed = (float) blockSize * GetFrameTime() * 30;
+
+        if (IsKeyDown(KEY_LEFT_SHIFT)) (float) blockSize * 2 * GetFrameTime() * 15;
+
         if (IsKeyDown(KEY_UP)) camera.target.y -= speed;
         if (IsKeyDown(KEY_DOWN)) camera.target.y += speed;
         if (IsKeyDown(KEY_LEFT)) camera.target.x -= speed;
@@ -57,7 +64,7 @@ int main() {
             int blockY = worldPos.y / blockSize;
             setCell(grid, blockX, blockY, VOID);
         }
-        else if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
+        if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
             Vector2 mousePos = GetMousePosition();
             Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
             int blockX = worldPos.x / blockSize;
@@ -72,10 +79,15 @@ int main() {
         displayGridImages(grid, (float) blockSize, textures, camera);
 
         EndMode2D();
+
+        DrawFPS(0, 0);
+
         EndDrawing();
     }
 
     CloseWindow();
+    free(textures);
+    free(grid.list);
 
     return 0;
 }
