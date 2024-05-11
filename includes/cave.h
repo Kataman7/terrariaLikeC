@@ -11,5 +11,6 @@ void generateDirt(struct Grid grid, double chanceToLive, int mineralValue, int i
 void caveGeneration(struct Grid grid);
 void caveDecoration(struct Grid grid);
 void generateMinerals(struct Grid grid, struct ConwayRule rule, double chanceToLive, int mineralValue, int iteration);
+void cleanStone(struct Grid grid);
 
 #endif

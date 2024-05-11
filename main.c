@@ -17,7 +17,7 @@ int main() {
     int blockSize = 45;
     double chanceToLive = 0.45;
     //caveGeneration(grid, chanceToLive);
-    generateLand(grid, 25);
+    generateLand(grid, 10);
 
     const int screenWidth = 40 * blockSize;
     const int screenHeight = 20 * blockSize;
@@ -26,9 +26,6 @@ int main() {
     InitWindow(screenWidth, screenHeight, "TerrariaLike");
 
     Texture2D* textures = createTexture();
-    //UpdateTexture(textures[VINE - 1], "texture/vine.png");
-    //UpdateTexture(textures[LEAVES_ORANGE - 1], "texture/lava.png");
-
 
     Camera2D camera = { 0 };
     camera.target = (Vector2){ ((float)grid.width/2)*(float)blockSize, ((float)grid.height/2)*(float)blockSize };
@@ -39,7 +36,7 @@ int main() {
     while (!WindowShouldClose())
     {
         BeginDrawing();
-        ClearBackground(RAYWHITE);
+        Color skyColor = {255,230,246};
 
 
         float zoomSpeed = 0.1f;
@@ -76,7 +73,7 @@ int main() {
 
         //nextVineGeneration(grid, &lastTime, 1);
         updateTick(grid, &lastTime2, 0.5);
-        displayGridImages(grid, (float) blockSize, textures, camera);
+        displayGridImages3(grid, (float) blockSize, textures, camera);
 
         EndMode2D();
 
@@ -85,6 +82,7 @@ int main() {
         EndDrawing();
     }
 
+    unloadTexture(textures, 14);
     CloseWindow();
     free(textures);
     free(grid.list);

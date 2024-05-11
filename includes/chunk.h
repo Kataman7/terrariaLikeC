@@ -30,6 +30,7 @@ void nextConwayGeneration(struct Grid grid, struct ConwayRule rule, int livingVa
 int equalGrids(struct Grid grid1, struct Grid grid2);
 struct Grid listNeighbor(struct Grid grid, int x, int y);
 void cleanLava(struct Grid grid);
+void displayGridImages3(struct Grid grid, float blockSize, Texture2D images[], Camera2D camera);
 
 
 

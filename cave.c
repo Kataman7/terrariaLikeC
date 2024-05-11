@@ -33,7 +33,6 @@ void generateDirt(struct Grid grid, double chanceToLive, int mineralValue, int i
         }
         free(neighbors.list);
     }
-
 }
 
 void generateVine(struct Grid grid) {
@@ -59,12 +58,12 @@ void nextVineGeneration(struct Grid grid, struct Grid nextGrid, int x, int y) {
 }
 
 void nextWaterGeneration(struct Grid grid, struct Grid nextGrid, int x, int y) {
-    if (getCell(grid, x, y + 1) != LEAVES_ORANGE) {
-        if ((countNeighbor(grid, LEAVES_ORANGE, x, y) < 2) && countNeighbor(grid, STONE, x, y ) < 2 && getCell(grid, x, y-1) != LEAVES_ORANGE) setCell(nextGrid, x, y, -1);
-        if (getCell(grid, x, y + 1) == VOID) setCell(nextGrid, x, y + 1, LEAVES_ORANGE);
+    if (getCell(grid, x, y + 1) != LAVA) {
+        if ((countNeighbor(grid, LAVA, x, y) < 2) && countNeighbor(grid, STONE, x, y ) < 2 && getCell(grid, x, y-1) != LAVA) setCell(nextGrid, x, y, -1);
+        if (getCell(grid, x, y + 1) == VOID) setCell(nextGrid, x, y + 1, LAVA);
         else {
-            if (getCell(grid, x + 1, y) <= 0) setCell(nextGrid, x + 1, y, LEAVES_ORANGE);
-            if (getCell(grid, x - 1, y) <= 0) setCell(nextGrid, x - 1, y, LEAVES_ORANGE);
+            if (getCell(grid, x + 1, y) <= 0) setCell(nextGrid, x + 1, y, LAVA);
+            if (getCell(grid, x - 1, y) <= 0) setCell(nextGrid, x - 1, y, LAVA);
         }
     }
 }
@@ -75,13 +74,13 @@ void updateTick(struct Grid grid, double *lastTime, double tickTime) {
         for (int i = 0; i < grid.height; ++i) {
             for (int j = 0; j < grid.width; ++j) {
                 if (getCell(grid, j, i) == VINE) nextVineGeneration(grid, nextGrid, j, i);
-                else if (getCell(grid, j, i) == LEAVES_ORANGE) nextWaterGeneration(grid, nextGrid, j, i);
+                else if (getCell(grid, j, i) == LAVA) nextWaterGeneration(grid, nextGrid, j, i);
             }
         }
         for (int i = 0; i < grid.height; ++i) {
             for (int j = 0; j < grid.width; ++j) {
                 if (getCell(nextGrid, j, i) == VINE) setCell(grid, j, i, VINE);
-                else if (getCell(nextGrid, j, i) == LEAVES_ORANGE) setCell(grid, j, i, LEAVES_ORANGE);
+                else if (getCell(nextGrid, j, i) == LAVA) setCell(grid, j, i, LAVA);
                 else if (getCell(nextGrid, j, i) == -1) setCell(grid, j, i, VOID);
             }
         }
@@ -95,8 +94,12 @@ void caveDecoration(struct Grid grid) {
     struct ConwayRule mineralRule = {1, 2, 3};
     struct ConwayRule stoneGrassRule = {1, 2, 3};
     struct ConwayRule stoneDirtRule = {1, 3, 2};
+    struct ConwayRule maze = {1, 5, 3};
 
-    generateDirt(grid, 0.02, DIRT, 6, STONE);
+    generateMinerals(grid, maze, 0.2, STONE_RED, 10);
+    //cleanStone(grid);
+
+    generateDirt(grid, 0.01, DIRT, 14, STONE);
 
     generateMinerals(grid, mineralRule, 0.04, MINERAL_PURPLE, 1);
     generateMinerals(grid, mineralRule, 0.07, MINERAL_BLACK, 1);
@@ -107,15 +110,26 @@ void caveDecoration(struct Grid grid) {
     generateMinerals(grid, stoneDirtRule, 0.02, MINERAL_WHITE, 1);
     generateMinerals(grid, stoneDirtRule, 0.03, MINERAL_PINK, 1);
 
+
+
     generateVine(grid);
-    randomGeneration(grid, 0.005, LEAVES_ORANGE, 0, 0);
+    randomGeneration(grid, 0.005, LAVA, 0, 0);
 }
 
 void cleanLava(struct Grid grid) {
     for (int i = 0; i < grid.height; ++i) {
         for (int j = 0; j < grid.width; ++j) {
-            if (getCell(grid, j, i) == LEAVES_ORANGE && countNeighbor(grid, STONE, j, i) < 1)
+            if (getCell(grid, j, i) == LAVA && countNeighbor(grid, STONE, j, i) < 1)
                 setCell(grid, j, i, VOID);
+        }
+    }
+}
+
+void cleanStone(struct Grid grid) {
+    for (int i = 0; i < grid.height; ++i) {
+        for (int j = 0; j < grid.width; ++j) {
+            if (getCell(grid, j, i) == STONE && countNeighbor(grid, STONE_RED, j, i) > 4)
+                setCell(grid, j, i, LEAVES_ORANGE);
         }
     }
 }

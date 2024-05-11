@@ -3,6 +3,11 @@
 
 #include "raylib.h"
 
+struct Block {
+        int id,
+        Texture2D 
+};
+
 #define VOID 0
 #define STONE 1
 #define STONE_GRASS 2
@@ -17,7 +22,15 @@
 #define VINE 11
 #define TRUNK_PURPLE 12
 #define LEAVES_GREEN 13
+#define LAVA 14
+#define TRUNK_BLUE 15
+#define TRUNK_YELLOW 16
+#define TRUNK_MUSHROOM 17
+#define STONE_BROKEN 18
+#define STONE_RED 19
+
 
 Texture2D* createTexture();
+void unloadTexture(Texture2D* texture2D, int i);
 
 #endif

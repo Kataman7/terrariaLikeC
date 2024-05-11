@@ -50,7 +50,8 @@ void generateLand(struct Grid grid, int max_step) {
 
     for (int i = 0; i < grid.height; ++i) {
         for (int j = 0; j < grid.width; ++j) {
-            if (i == altitude[j] + 1) setCell(grid, j, i + sky, DIRT_GRASS);
+            if (i < altitude[j] + 1) setCell(grid, j, i + sky, VOID);
+            else if (i == altitude[j] + 1) setCell(grid, j, i + sky, DIRT_GRASS);
             else if (i > altitude[j] + 1 && i < altitude[j] + 3) setCell(grid, j, i + sky, DIRT);
             else if (i >= altitude[j] + 3 && i < altitude[j] + 6) setCell(grid, j, i + sky, STONE);
             else if (i >= altitude[j] + 5) {
@@ -81,7 +82,8 @@ void treeGeneration(struct Grid grid) {
             setCell(pattern, 2, 2, DIRT_GRASS);
 
             if (equalGrids(neighbors, pattern) == 1 && rand() % 2 == 0) {
-                addStructure(grid, createTree(), j-1, i-5);
+                struct Grid tree = createTree(rand() % 3);
+                addStructure(grid, tree, j-tree.width/2, i-(tree.height-1));
             }
 
             free(neighbors.list);

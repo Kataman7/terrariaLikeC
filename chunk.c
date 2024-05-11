@@ -119,6 +119,7 @@ void printGrid(struct Grid grid) {
 }
 
 void displayGridImages(struct Grid grid, float blockSize, Texture2D images[], Camera2D camera) {
+
     for (int i = 0; i < grid.height; ++i) {
         for (int j = 0; j < grid.width; ++j) {
             // Calculate destination rectangle for the current grid cell
@@ -137,8 +138,55 @@ void displayGridImages(struct Grid grid, float blockSize, Texture2D images[], Ca
                     Color tint = WHITE;
                     DrawTexturePro(images[cellValue - 1], sourceRec, destRec, origin, rotation, tint);
                 } else {
-                    DrawRectangle(j * blockSize, i * blockSize, blockSize, blockSize, RAYWHITE);
+                    Color skyColor = {255,170,170};
+                    DrawRectangle(j * blockSize, i * blockSize, blockSize, blockSize, skyColor);
                 }
+            }
+        }
+    }
+}
+
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+int min(int a, int b) {
+    return (a < b) ? a : b;
+}
+
+void displayGridImages3(struct Grid grid, float blockSize, Texture2D images[], Camera2D camera) {
+
+    Color skyColor = {225,246,255};
+    ClearBackground(skyColor);
+
+    // Calculer les limites de la grille visible à l'écran
+    Vector2 minScreen = GetScreenToWorld2D((Vector2){0, 0}, camera);
+    Vector2 maxScreen = GetScreenToWorld2D((Vector2){GetScreenWidth(), GetScreenHeight()}, camera);
+
+    // Convertir les limites de l'écran en coordonnées de grille
+    int minX = (int)(minScreen.x / blockSize);
+    int minY = (int)(minScreen.y / blockSize);
+    int maxX = (int)(maxScreen.x / blockSize) + 1; // Ajouter 1 pour assurer le rendu complet du dernier bloc
+    int maxY = (int)(maxScreen.y / blockSize) + 1;
+
+    // Clipper les limites aux limites de la grille
+    minX = max(0, minX);
+    minY = max(0, minY);
+    maxX = min(grid.width, maxX);
+    maxY = min(grid.height, maxY);
+
+    // Dessiner uniquement les blocs visibles à l'écran
+    for (int i = minY; i < maxY; ++i) {
+        for (int j = minX; j < maxX; ++j) {
+            Rectangle destRec = {(float) j * blockSize, (float) i * blockSize, blockSize, blockSize};
+            int cellValue = getCell(grid, j, i);
+            if (cellValue >= 1 && cellValue <= 100) {
+                Rectangle sourceRec = {0.0f, 0.0f, (float) images[cellValue - 1].width,
+                                       (float) images[cellValue - 1].height};
+                Vector2 origin = {0.0f, 0.0f};
+                float rotation = 0.0f;
+                Color tint = WHITE;
+                DrawTexturePro(images[cellValue - 1], sourceRec, destRec, origin, rotation, tint);
             }
         }
     }
