@@ -91,6 +91,13 @@ build CMakeFiles/TerrariaLike.dir/structure.c.obj: C_COMPILER__TerrariaLike_unsc
   OBJECT_DIR = CMakeFiles\TerrariaLike.dir
   OBJECT_FILE_DIR = CMakeFiles\TerrariaLike.dir
 
+build CMakeFiles/TerrariaLike.dir/player.c.obj: C_COMPILER__TerrariaLike_unscanned_Debug C$:/Users/anton/CLionProjects/terrariaLikeC/player.c || cmake_object_order_depends_target_TerrariaLike
+  DEP_FILE = CMakeFiles\TerrariaLike.dir\player.c.obj.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  INCLUDES = -IC:/raylib/raylib/src
+  OBJECT_DIR = CMakeFiles\TerrariaLike.dir
+  OBJECT_FILE_DIR = CMakeFiles\TerrariaLike.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target TerrariaLike
@@ -99,7 +106,7 @@ build CMakeFiles/TerrariaLike.dir/structure.c.obj: C_COMPILER__TerrariaLike_unsc
 #############################################
 # Link the executable TerrariaLike.exe
 
-build TerrariaLike.exe: C_EXECUTABLE_LINKER__TerrariaLike_Debug CMakeFiles/TerrariaLike.dir/main.c.obj CMakeFiles/TerrariaLike.dir/chunk.c.obj CMakeFiles/TerrariaLike.dir/land.c.obj CMakeFiles/TerrariaLike.dir/cave.c.obj CMakeFiles/TerrariaLike.dir/block.c.obj CMakeFiles/TerrariaLike.dir/structure.c.obj | C$:/raylib/raylib/src/libraylib.a
+build TerrariaLike.exe: C_EXECUTABLE_LINKER__TerrariaLike_Debug CMakeFiles/TerrariaLike.dir/main.c.obj CMakeFiles/TerrariaLike.dir/chunk.c.obj CMakeFiles/TerrariaLike.dir/land.c.obj CMakeFiles/TerrariaLike.dir/cave.c.obj CMakeFiles/TerrariaLike.dir/block.c.obj CMakeFiles/TerrariaLike.dir/structure.c.obj CMakeFiles/TerrariaLike.dir/player.c.obj | C$:/raylib/raylib/src/libraylib.a
   FLAGS = -g
   LINK_LIBRARIES = C:/raylib/raylib/src/libraylib.a  -lwinmm  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\TerrariaLike.dir

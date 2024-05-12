@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <time.h>
 #include "includes/chunk.h"
 #include "raylib.h"
 #include "includes/block.h"
+#include "includes/land.h"
 
 struct Grid createGrid(int width, int height) {
     struct Grid grid = {width, height, calloc(width * height, sizeof(int))};
@@ -118,34 +117,6 @@ void printGrid(struct Grid grid) {
     }
 }
 
-void displayGridImages(struct Grid grid, float blockSize, Texture2D images[], Camera2D camera) {
-
-    for (int i = 0; i < grid.height; ++i) {
-        for (int j = 0; j < grid.width; ++j) {
-            // Calculate destination rectangle for the current grid cell
-            Rectangle destRec = {(float) j * blockSize, (float) i * blockSize, blockSize, blockSize};
-
-            // Check if the destination rectangle is visible in the camera view
-            if (CheckCollisionRecs(destRec,
-                                   (Rectangle) {camera.target.x - camera.offset.x, camera.target.y - camera.offset.y,
-                                                GetScreenWidth(), GetScreenHeight()})) {
-                int cellValue = getCell(grid, j, i);
-                if (cellValue >= 1 && cellValue <= 100) {
-                    Rectangle sourceRec = {0.0f, 0.0f, (float) images[cellValue - 1].width,
-                                           (float) images[cellValue - 1].height};
-                    Vector2 origin = {0.0f, 0.0f};
-                    float rotation = 0.0f;
-                    Color tint = WHITE;
-                    DrawTexturePro(images[cellValue - 1], sourceRec, destRec, origin, rotation, tint);
-                } else {
-                    Color skyColor = {255,170,170};
-                    DrawRectangle(j * blockSize, i * blockSize, blockSize, blockSize, skyColor);
-                }
-            }
-        }
-    }
-}
-
 int max(int a, int b) {
     return (a > b) ? a : b;
 }
@@ -192,22 +163,21 @@ void displayGridImages3(struct Grid grid, float blockSize, Texture2D images[], C
     }
 }
 
-void displayGridImages2(struct Grid grid, float blockSize, Texture2D images[], Camera2D camera) {
-
-    for (int i = 0; i < grid.height; ++i) {
-        for (int j = 0; j < grid.width; ++j) {
-            int cellValue = getCell(grid, j, i);
-            if (cellValue >= 1 && cellValue <= 6) {
-                Rectangle sourceRec = {0.0f, 0.0f, (float) images[cellValue - 1].width,
-                                       (float) -images[cellValue - 1].height};
-                Rectangle destRec = {(float) j * blockSize, (float) i * blockSize, blockSize, blockSize};
-                Vector2 origin = {0.0f, 0.0f};
-                float rotation = 0.0f;
-                Color tint = WHITE;
-                DrawTexturePro(images[cellValue - 1], sourceRec, destRec, origin, rotation, tint);
-            } else DrawRectangle(j * blockSize, i * blockSize, blockSize, blockSize, RAYWHITE);
-        }
+void gridEdit(struct Grid grid, Camera2D camera, int blockSize) {
+    if (IsKeyPressed(KEY_SPACE)) generateLand(grid, 25);
+    if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+        Vector2 mousePos = GetMousePosition();
+        Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
+        int blockX = worldPos.x / blockSize;
+        int blockY = worldPos.y / blockSize;
+        setCell(grid, blockX, blockY, VOID);
+    }
+    if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
+        Vector2 mousePos = GetMousePosition();
+        Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
+        int blockX = worldPos.x / blockSize;
+        int blockY = worldPos.y / blockSize;
+        setCell(grid, blockX, blockY, STONE);
     }
 }
-
 

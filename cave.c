@@ -1,6 +1,7 @@
 #include "includes/chunk.h"
 #include "includes/block.h"
 #include "includes/cave.h"
+#include "stdlib.h"
 
 void caveGeneration(struct Grid grid) {
     for (int i = 0; i < 10; ++i) {
@@ -96,7 +97,7 @@ void caveDecoration(struct Grid grid) {
     struct ConwayRule stoneDirtRule = {1, 3, 2};
     struct ConwayRule maze = {1, 5, 3};
 
-    generateMinerals(grid, maze, 0.2, STONE_RED, 10);
+    //generateMinerals(grid, maze, 0.2, STONE_RED, 10);
     //cleanStone(grid);
 
     generateDirt(grid, 0.01, DIRT, 14, STONE);

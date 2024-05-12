@@ -1,8 +1,6 @@
 #ifndef CHUNK_H_INCLUDED
 #define CHUNK_H_INCLUDED
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <raylib.h>
 
 struct Grid {
@@ -31,6 +29,7 @@ int equalGrids(struct Grid grid1, struct Grid grid2);
 struct Grid listNeighbor(struct Grid grid, int x, int y);
 void cleanLava(struct Grid grid);
 void displayGridImages3(struct Grid grid, float blockSize, Texture2D images[], Camera2D camera);
+void gridEdit(struct Grid grid, Camera2D camera, int blockSize);
 
 
 

@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "includes/chunk.h"
 #include "raylib.h"
 #include "includes/land.h"
 #include "includes/block.h"
 #include "includes/cave.h"
+#include "includes/player.h"
+#include "time.h"
 
 int main() {
 
@@ -31,13 +32,17 @@ int main() {
     camera.target = (Vector2){ ((float)grid.width/2)*(float)blockSize, ((float)grid.height/2)*(float)blockSize };
     camera.zoom = 1.0f;
 
+    struct Player player = {
+            camera.target.x,
+            camera.target.y,
+            0.5f,
+    };
+
     double lastTime2 = GetTime();
 
     while (!WindowShouldClose())
     {
         BeginDrawing();
-        Color skyColor = {255,230,246};
-
 
         float zoomSpeed = 0.1f;
         float newZoom = camera.zoom - GetMouseWheelMove() * zoomSpeed;
@@ -47,33 +52,20 @@ int main() {
 
         float speed = (float) blockSize * GetFrameTime() * 30;
 
-        if (IsKeyDown(KEY_LEFT_SHIFT)) (float) blockSize * 2 * GetFrameTime() * 15;
+        cameraControl(&camera, speed);
+        gridEdit(grid, camera, blockSize);
+        playerControl(grid, &player, blockSize);
+        checkCollision(grid, player, blockSize);
+        playerUpdate(grid, &player, blockSize, 0.001f);
 
-        if (IsKeyDown(KEY_UP)) camera.target.y -= speed;
-        if (IsKeyDown(KEY_DOWN)) camera.target.y += speed;
-        if (IsKeyDown(KEY_LEFT)) camera.target.x -= speed;
-        if (IsKeyDown(KEY_RIGHT)) camera.target.x += speed;
-        if (IsKeyPressed(KEY_SPACE)) generateLand(grid, 25);
-        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-            Vector2 mousePos = GetMousePosition();
-            Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
-            int blockX = worldPos.x / blockSize;
-            int blockY = worldPos.y / blockSize;
-            setCell(grid, blockX, blockY, VOID);
-        }
-        if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
-            Vector2 mousePos = GetMousePosition();
-            Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
-            int blockX = worldPos.x / blockSize;
-            int blockY = worldPos.y / blockSize;
-            setCell(grid, blockX, blockY, STONE);
-        }
+        camera.target.x = player.x - (float) screenWidth / 2;
+        camera.target.y = player.y - (float) screenHeight / 2;
 
         BeginMode2D(camera);
 
-        //nextVineGeneration(grid, &lastTime, 1);
         updateTick(grid, &lastTime2, 0.5);
         displayGridImages3(grid, (float) blockSize, textures, camera);
+        displayPlayer(player, blockSize);
 
         EndMode2D();
 
