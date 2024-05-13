@@ -5,16 +5,18 @@
 #include "raylib.h"
 
 struct Player {
-    float x;
-    float y;
+    Rectangle hidbox;
     float velocity;
+    float speed;
+    int jumpCount;
+    int range;
 };
 
-void playerControl(struct Grid grid, struct Player* player, int blockSize);
-void displayPlayer(struct Player player, int blockSize);
-//void gravity(struct Player* player, float gravity);
+void playerControl(struct Grid grid, struct Player* player, float deltatime, float gravity, Camera2D camera, int blockSize);
+void displayPlayer(struct Player player);
 void cameraControl(Camera2D *camera, float speed);
 Rectangle checkCollision(struct Grid grid, struct Player player, int blockSize);
-void playerUpdate(struct Grid grid, struct Player* player, int blockSize, float gravity);
+void playerUpdate(struct Grid grid, struct Player *player, int blockSize, float gravity, float deltaTime, Camera2D camera);
+struct Player createPlayer(float x, float y, int blockSize);
 
 #endif

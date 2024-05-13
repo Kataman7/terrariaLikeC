@@ -26,17 +26,16 @@ int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
     InitWindow(screenWidth, screenHeight, "TerrariaLike");
 
+    SetTargetFPS( 450 );
+    //SetTargetFPS( GetMonitorRefreshRate(GetCurrentMonitor()));
+
     Texture2D* textures = createTexture();
 
     Camera2D camera = { 0 };
     camera.target = (Vector2){ ((float)grid.width/2)*(float)blockSize, ((float)grid.height/2)*(float)blockSize };
     camera.zoom = 1.0f;
 
-    struct Player player = {
-            camera.target.x,
-            camera.target.y,
-            0.5f,
-    };
+    struct Player player = createPlayer(camera.target.x, camera.target.y, blockSize);
 
     double lastTime2 = GetTime();
 
@@ -53,19 +52,18 @@ int main() {
         float speed = (float) blockSize * GetFrameTime() * 30;
 
         cameraControl(&camera, speed);
-        gridEdit(grid, camera, blockSize);
-        playerControl(grid, &player, blockSize);
-        checkCollision(grid, player, blockSize);
-        playerUpdate(grid, &player, blockSize, 0.001f);
+        //gridEdit(grid, camera, blockSize);
+        //playerControl(grid, &player, blockSize);
 
-        camera.target.x = player.x - (float) screenWidth / 2;
-        camera.target.y = player.y - (float) screenHeight / 2;
+        camera.target.x = player.hidbox.x - (float) screenWidth / 2;
+        camera.target.y = player.hidbox.y - (float) screenHeight / 2;
 
         BeginMode2D(camera);
 
         updateTick(grid, &lastTime2, 0.5);
         displayGridImages3(grid, (float) blockSize, textures, camera);
-        displayPlayer(player, blockSize);
+        displayPlayer(player);
+        playerUpdate(grid, &player, blockSize, 3000, GetFrameTime(), camera);
 
         EndMode2D();
 
