@@ -2,6 +2,7 @@
 #define BLOCK_H
 
 #include "raylib.h"
+#include "stdlib.h"
 
 #define VOID 0
 #define STONE 1
@@ -24,7 +25,21 @@
 #define STONE_BROKEN 18
 #define STONE_RED 19
 
+//state
+#define SOLID 0
+#define LIQUID 1
+#define LADDER 2
+
+typedef struct {
+    int id;
+    int state;
+    Texture2D texture;
+} Block;
+
+extern Block* blocks;
+
 Texture2D* createTexture();
-void unloadTexture(Texture2D* texture2D, int i);
+void createBlocks();
+void unloadTexture(int i);
 
 #endif

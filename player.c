@@ -6,69 +6,33 @@
 
 struct Player createPlayer(float x, float y, int blockSize) {
     Rectangle hbox = {x, y, (float) (blockSize*0.95), (float) (blockSize*1.95)};
-    struct Player player = {hbox, 0, 350, 0, 6};
+    struct Player player = {hbox, 0, 350, 0, 6, 0.45f};
     return player;
 }
 
-Rectangle checkCollision(struct Grid grid, struct Player player, int blockSize) {
-
-    float blockX = player.hidbox.x / (float) blockSize;
-    float blockY = player.hidbox.y / (float) blockSize;
-
-    for (int i = blockY-2; i < blockY+2; ++i) {
-        for (int j = blockX-2; j < blockX+2; ++j) {
-            if(getCell(grid, j, i) != 0) {
-
-                Rectangle blockHB = {(float) (j*blockSize), (float) (i*blockSize), (float) blockSize, (float) blockSize};
-                DrawRectangleRec(blockHB, RED);
-
-                if (CheckCollisionRecs(blockHB, player.hidbox)) {
-                    DrawRectangleRec(blockHB, GREEN);
-                    return blockHB;
-                }
-            }
-        }
-    }
-
-    Rectangle null = {0, 0, 0, 0};
-    return null;
-}
-
-
-void mouveUP(struct Player* player, float gravity) {
-    if (player->jumpCount == 0) {
-        player->velocity = -gravity * 0.45;
-        player->jumpCount ++;
-    }
-}
-
-void mouveDown(struct Player* player, float deltaTime) {
-}
-
-void mouveLeft(struct Player* player, float deltaTime) {
-    player->hidbox.x -= player->speed * deltaTime;
-}
-
-void mouveRight(struct Player* player, float deltaTime) {
-    player->hidbox.x += player->speed * deltaTime;
-}
-
 void mine(struct Player player, struct Grid grid, Camera2D camera, int blockSize) {
-    Vector2 center = {player.hidbox.x+player.hidbox.width/2, player.hidbox.y+player.hidbox.height/2};
+    Vector2 center = {player.entity.hidbox.x+player.entity.hidbox.width/2, player.entity.hidbox.y+player.entity.hidbox.height/2};
 
     Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), camera);
     Rectangle mouse = {mousePos.x, mousePos.y, 5, 5 };
 
-    if (CheckCollisionCircleRec(center, (float) blockSize*player.range, mouse)) {
+    if (CheckCollisionCircleRec(center, (float) blockSize*player.entity.range, mouse)) {
         gridEdit(grid, camera, blockSize);
     }
 }
 
+void moveUpPlayer(struct Grid grid, struct Player* player, float gravity, int blockSize) {
+    if (checkCollisionState(grid, player->entity, blockSize) == LADDER || checkCollisionState(grid, player->entity, blockSize) == LIQUID) {
+        player->entity.velocity = -gravity * player->entity.jumpPower / 4;
+    }
+}
+
 void playerControl(struct Grid grid, struct Player* player, float deltatime, float gravity, Camera2D camera, int blockSize) {
-    if (IsKeyDown(KEY_UP)) mouveUP(player, gravity);
-    if (IsKeyDown(KEY_DOWN)) mouveDown(player, deltatime);
-    if (IsKeyDown(KEY_LEFT)) mouveLeft(player, deltatime);
-    if (IsKeyDown(KEY_RIGHT)) mouveRight(player, deltatime);
+    if (IsKeyDown(KEY_UP)) moveUpPlayer(grid, player, gravity, blockSize);
+    if (IsKeyPressed(KEY_UP)) moveUP( &player->entity, gravity);
+    if (IsKeyDown(KEY_DOWN)) moveDown(&player->entity, deltatime);
+    if (IsKeyDown(KEY_LEFT)) moveLeft(&player->entity, deltatime);
+    if (IsKeyDown(KEY_RIGHT)) moveRight(&player->entity, deltatime);
     mine(*player, grid, camera, blockSize);
 }
 
@@ -80,30 +44,29 @@ void cameraControl(Camera2D *camera, float speed) {
 }
 
 void displayPlayer(struct Player player) {
-    DrawRectangleRec(player.hidbox, DARKBLUE);
-    //DrawRectangle(player.hidbox.x, player.hidbox.y, player.hidbox.width, player.hidbox.height, DARKBLUE);
+    displayHidbox(player.entity, DARKBLUE);
 }
 
 void playerUpdate(struct Grid grid, struct Player *player, int blockSize, float gravity, float deltaTime, Camera2D camera) {
 
-    float previousX = player->hidbox.x;
-    float previousY = player->hidbox.y;
+    float previousX = player->entity.hidbox.x;
+    float previousY = player->entity.hidbox.y;
 
-    player->velocity += gravity * deltaTime;
-    player->hidbox.y += player->velocity * deltaTime;
+    player->entity.velocity += gravity * deltaTime;
+    player->entity.hidbox.y += player->entity.velocity * deltaTime;
 
-    Rectangle verticalCollision = checkCollision(grid, *player, blockSize);
+    Rectangle verticalCollision = checkCollision(grid, player->entity, blockSize);
     if (verticalCollision.x != 0) {
-        player->hidbox.y = previousY;
-        player->velocity = 0;
-        player->jumpCount = 0;
+        if (player->entity.velocity > 0) player->entity.jumpCount = 0;
+        player->entity.hidbox.y = previousY;
+        player->entity.velocity = 0;
     }
 
     playerControl(grid, player, deltaTime, gravity, camera, blockSize);
 
     // collision horizontale après gestion des mouvements horizontaux
-    Rectangle horizontalCollision = checkCollision(grid, *player, blockSize);
+    Rectangle horizontalCollision = checkCollision(grid, player->entity, blockSize);
     if (horizontalCollision.x != 0) {
-        player->hidbox.x = previousX;
+        player->entity.hidbox.x = previousX;
     }
 }

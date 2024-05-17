@@ -15,7 +15,11 @@ add_executable(TerrariaLike
         structure.c
         includes/structure.h
         player.c
-        includes/player.h)
+        includes/player.h
+        includes/entity.h
+        entity.c
+        includes/slime.h
+        slime.c)
 
 include_directories(C:\\raylib\\raylib\\src)
 target_link_libraries(TerrariaLike C:\\raylib\\raylib\\src\\libraylib.a)

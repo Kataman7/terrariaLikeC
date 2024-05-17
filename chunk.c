@@ -125,14 +125,11 @@ int min(int a, int b) {
     return (a < b) ? a : b;
 }
 
-void displayGridImages3(struct Grid grid, float blockSize, Texture2D images[], Camera2D camera) {
-
-    Color skyColor = {225,246,255};
-    ClearBackground(skyColor);
+void displayGrid(struct Grid grid, float blockSize, Camera2D camera) {
 
     // Calculer les limites de la grille visible à l'écran
     Vector2 minScreen = GetScreenToWorld2D((Vector2){0, 0}, camera);
-    Vector2 maxScreen = GetScreenToWorld2D((Vector2){GetScreenWidth(), GetScreenHeight()}, camera);
+    Vector2 maxScreen = GetScreenToWorld2D((Vector2){(float) GetScreenWidth(), (float) GetScreenHeight()}, camera);
 
     // Convertir les limites de l'écran en coordonnées de grille
     int minX = (int)(minScreen.x / blockSize);
@@ -151,13 +148,14 @@ void displayGridImages3(struct Grid grid, float blockSize, Texture2D images[], C
         for (int j = minX; j < maxX; ++j) {
             Rectangle destRec = {(float) j * blockSize, (float) i * blockSize, blockSize, blockSize};
             int cellValue = getCell(grid, j, i);
-            if (cellValue >= 1 && cellValue <= 100) {
-                Rectangle sourceRec = {0.0f, 0.0f, (float) images[cellValue - 1].width,
-                                       (float) images[cellValue - 1].height};
+            if (cellValue != blocks[VOID].id) {
+                Rectangle sourceRec = {
+                        0.0f,
+                        0.0f,
+                        (float) blocks[cellValue].texture.width,
+                        (float) blocks[cellValue].texture.height};
                 Vector2 origin = {0.0f, 0.0f};
-                float rotation = 0.0f;
-                Color tint = WHITE;
-                DrawTexturePro(images[cellValue - 1], sourceRec, destRec, origin, rotation, tint);
+                DrawTexturePro(blocks[cellValue].texture, sourceRec, destRec, origin, 0.0f, WHITE);
             }
         }
     }
@@ -168,15 +166,15 @@ void gridEdit(struct Grid grid, Camera2D camera, int blockSize) {
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
         Vector2 mousePos = GetMousePosition();
         Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
-        int blockX = worldPos.x / blockSize;
-        int blockY = worldPos.y / blockSize;
+        int blockX = (int) worldPos.x / blockSize;
+        int blockY = (int) worldPos.y / blockSize;
         setCell(grid, blockX, blockY, VOID);
     }
     if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
         Vector2 mousePos = GetMousePosition();
         Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
-        int blockX = worldPos.x / blockSize;
-        int blockY = worldPos.y / blockSize;
+        int blockX = (int) worldPos.x / blockSize;
+        int blockY = (int) worldPos.y / blockSize;
         setCell(grid, blockX, blockY, STONE);
     }
 }

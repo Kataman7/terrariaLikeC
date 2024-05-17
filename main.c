@@ -7,6 +7,8 @@
 #include "includes/cave.h"
 #include "includes/player.h"
 #include "time.h"
+#include "includes/slime.h"
+#include "includes/entity.h"
 
 int main() {
 
@@ -16,8 +18,6 @@ int main() {
 
     struct Grid grid = createGrid(40 * 6, 40 * 6);
     int blockSize = 45;
-    double chanceToLive = 0.45;
-    //caveGeneration(grid, chanceToLive);
     generateLand(grid, 10);
 
     const int screenWidth = 40 * blockSize;
@@ -26,16 +26,20 @@ int main() {
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
     InitWindow(screenWidth, screenHeight, "TerrariaLike");
 
-    SetTargetFPS( 450 );
+    SetTargetFPS( 500 );
     //SetTargetFPS( GetMonitorRefreshRate(GetCurrentMonitor()));
 
-    Texture2D* textures = createTexture();
+    //Texture2D* textures = createTexture();
+    //blocks = malloc(20 * sizeof(Block));
+    createBlocks();
+
 
     Camera2D camera = { 0 };
     camera.target = (Vector2){ ((float)grid.width/2)*(float)blockSize, ((float)grid.height/2)*(float)blockSize };
     camera.zoom = 1.0f;
 
     struct Player player = createPlayer(camera.target.x, camera.target.y, blockSize);
+    struct Slime monster = createSlime(camera.target.x, camera.target.y, blockSize);
 
     double lastTime2 = GetTime();
 
@@ -52,18 +56,20 @@ int main() {
         float speed = (float) blockSize * GetFrameTime() * 30;
 
         cameraControl(&camera, speed);
-        //gridEdit(grid, camera, blockSize);
-        //playerControl(grid, &player, blockSize);
 
-        camera.target.x = player.hidbox.x - (float) screenWidth / 2;
-        camera.target.y = player.hidbox.y - (float) screenHeight / 2;
+        camera.target.x = player.entity.hidbox.x - (float) screenWidth / 2;
+        camera.target.y = player.entity.hidbox.y - (float) screenHeight / 2;
 
         BeginMode2D(camera);
+        Color skyColor = {225,246,255};
+        ClearBackground(skyColor);
 
         updateTick(grid, &lastTime2, 0.5);
-        displayGridImages3(grid, (float) blockSize, textures, camera);
         displayPlayer(player);
         playerUpdate(grid, &player, blockSize, 3000, GetFrameTime(), camera);
+        slimeUpdate(grid, &monster, player, blockSize, 3000, GetFrameTime());
+        displayHidbox(monster.entity, YELLOW);
+        displayGrid(grid, (float) blockSize, camera);
 
         EndMode2D();
 
@@ -72,9 +78,9 @@ int main() {
         EndDrawing();
     }
 
-    unloadTexture(textures, 14);
+    unloadTexture(STONE_RED);
     CloseWindow();
-    free(textures);
+    free(blocks);
     free(grid.list);
 
     return 0;

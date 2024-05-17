@@ -1,35 +1,35 @@
 #include <raylib.h>
 #include "includes/block.h"
 #include <stdlib.h>
-#include <stdio.h>
 
-Texture2D* createTexture() {
-    Texture2D* textures = malloc(20 * sizeof(Texture2D));
-    textures[STONE - 1] = LoadTexture("texture/stone.png");
-    textures[MINERAL_PURPLE - 1] = LoadTexture("texture/mineral_purple.png");
-    textures[MINERAL_BLACK - 1] = LoadTexture("texture/mineral_black.png");
-    textures[VINE - 1] = LoadTexture("texture/vine.png");
-    textures[STONE_GRASS - 1] = LoadTexture("texture/stone_grass.png");
-    textures[STONE_DIRT - 1] = LoadTexture("texture/stone_dirt.png");
-    textures[MINERAL_PINK - 1] = LoadTexture("texture/mineral_pink.png");
-    textures[MINERAL_WHITE - 1] = LoadTexture("texture/mineral_white.png");
-    textures[DIRT - 1] = LoadTexture("texture/dirt.png");
-    textures[DIRT_GRASS - 1] = LoadTexture("texture/dirt_grass.png");
-    textures[LEAVES_GREEN - 1] = LoadTexture("texture/leaves_green.png");
-    textures[LEAVES_ORANGE - 1] = LoadTexture("texture/leaves_orange.png");
-    textures[TRUNK_PURPLE - 1] = LoadTexture("texture/trunk_purple.png");
-    textures[LAVA - 1] = LoadTexture("texture/lava.png");
-    textures[TRUNK_BLUE - 1] = LoadTexture("texture/trunk_blue.png");
-    textures[TRUNK_YELLOW - 1] = LoadTexture("texture/trunk_yellow.png");
-    textures[TRUNK_MUSHROOM - 1] = LoadTexture("texture/trunk_mushroom.png");
-    textures[STONE_BROKEN - 1] = LoadTexture("texture/stone_broken.png");
-    textures[STONE_RED - 1] = LoadTexture("texture/stone_red.png");
+Block* blocks = NULL;
 
-    return textures; // 14
+void createBlocks() {
+    blocks = malloc(20 * sizeof(Block));
+    blocks[VOID] = (Block){VOID, 0, LoadTexture("texture/stone.png")};
+    blocks[STONE] = (Block){STONE, SOLID, LoadTexture("texture/stone.png")};
+    blocks[STONE_GRASS] = (Block){STONE_GRASS, SOLID, LoadTexture("texture/stone_grass.png")};
+    blocks[STONE_DIRT] = (Block){STONE_DIRT, SOLID, LoadTexture("texture/stone_dirt.png")};
+    blocks[MINERAL_BLACK] = (Block){MINERAL_BLACK, SOLID, LoadTexture("texture/mineral_black.png")};
+    blocks[MINERAL_WHITE] = (Block){MINERAL_WHITE, SOLID, LoadTexture("texture/mineral_white.png")};
+    blocks[MINERAL_PINK] = (Block){MINERAL_PINK, SOLID, LoadTexture("texture/mineral_pink.png")};
+    blocks[MINERAL_PURPLE] = (Block){MINERAL_PURPLE, SOLID, LoadTexture("texture/mineral_purple.png")};
+    blocks[DIRT] = (Block){DIRT, SOLID, LoadTexture("texture/dirt.png")};
+    blocks[DIRT_GRASS] = (Block){DIRT_GRASS, SOLID, LoadTexture("texture/dirt_grass.png")};
+    blocks[LEAVES_ORANGE] = (Block){LEAVES_ORANGE, SOLID, LoadTexture("texture/leaves_orange.png")};
+    blocks[VINE] = (Block){VINE, LADDER, LoadTexture("texture/vine.png")};
+    blocks[TRUNK_PURPLE] = (Block){TRUNK_PURPLE, SOLID, LoadTexture("texture/trunk_purple.png")};
+    blocks[LEAVES_GREEN] = (Block){LEAVES_GREEN, SOLID, LoadTexture("texture/leaves_green.png")};
+    blocks[LAVA] = (Block){LAVA, LIQUID, LoadTexture("texture/lava.png")};
+    blocks[TRUNK_BLUE] = (Block){TRUNK_BLUE, SOLID, LoadTexture("texture/trunk_blue.png")};
+    blocks[TRUNK_YELLOW] = (Block){TRUNK_YELLOW, SOLID, LoadTexture("texture/trunk_yellow.png")};
+    blocks[TRUNK_MUSHROOM] = (Block){TRUNK_MUSHROOM, SOLID, LoadTexture("texture/trunk_mushroom.png")};
+    blocks[STONE_BROKEN] = (Block){STONE_BROKEN, SOLID, LoadTexture("texture/stone_broken.png")};
+    blocks[STONE_RED] = (Block){STONE_RED, SOLID, LoadTexture("texture/stone_red.png")};
 }
 
-void unloadTexture(Texture2D* texture2D, int i) {
+void unloadTexture(int i) {
     for (int j = 0; j < i; ++j) {
-        UnloadTexture(texture2D[j]);
+        UnloadTexture(blocks->texture);
     }
 }
