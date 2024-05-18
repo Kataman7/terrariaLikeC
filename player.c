@@ -6,17 +6,25 @@
 
 struct Player createPlayer(float x, float y, int blockSize) {
     Rectangle hbox = {x, y, (float) (blockSize*0.95), (float) (blockSize*1.95)};
-    struct Player player = {hbox, 0, 350, 0, 6, 0.45f};
+    struct Player player = {hbox, 0, 350, 0, 5, 0.45f};
     return player;
 }
 
 void mine(struct Player player, struct Grid grid, Camera2D camera, int blockSize) {
     Vector2 center = {player.entity.hidbox.x+player.entity.hidbox.width/2, player.entity.hidbox.y+player.entity.hidbox.height/2};
 
-    Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), camera);
-    Rectangle mouse = {mousePos.x, mousePos.y, 5, 5 };
+   // Vector2 mousePos = GetScreenToWorld2D(getBlockPosCliqued(camera, blockSize), camera);
+    Vector2 blockPos = getBlockPosCliqued(camera, blockSize);
+    Rectangle blockPosHB = {(float) ((int) blockPos.x * blockSize), (float) ((int) blockPos.y * blockSize), (float) blockSize, (float) blockSize };
 
-    if (CheckCollisionCircleRec(center, (float) blockSize*player.entity.range, mouse)) {
+    if (CheckCollisionCircleRec(center, (float) (blockSize*player.entity.range), blockPosHB)) {
+        Rectangle sourceRec = {
+                0.0f,
+                0.0f,
+                (float) blocks[CURSOR].texture.width,
+                (float) blocks[CURSOR].texture.height};
+        Vector2 origin = {0.0f, 0.0f};
+        DrawTexturePro(blocks[CURSOR].texture, sourceRec, blockPosHB, origin, 0.0f, WHITE);
         gridEdit(grid, camera, blockSize);
     }
 }

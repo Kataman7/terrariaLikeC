@@ -161,21 +161,23 @@ void displayGrid(struct Grid grid, float blockSize, Camera2D camera) {
     }
 }
 
+Vector2 getBlockPosCliqued(Camera2D camera, int blockSize) {
+    Vector2 mousePos = GetMousePosition();
+    Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
+    Vector2 blockPos = {worldPos.x / (float) blockSize, worldPos.y / (float) blockSize};
+    printf("x%i, y%i\n", (int) blockPos.x, (int) blockPos.y);
+    return blockPos;
+}
+
 void gridEdit(struct Grid grid, Camera2D camera, int blockSize) {
     if (IsKeyPressed(KEY_SPACE)) generateLand(grid, 25);
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-        Vector2 mousePos = GetMousePosition();
-        Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
-        int blockX = (int) worldPos.x / blockSize;
-        int blockY = (int) worldPos.y / blockSize;
-        setCell(grid, blockX, blockY, VOID);
+        Vector2 blockPos = getBlockPosCliqued(camera, blockSize);
+        setCell(grid, (int) blockPos.x, (int) blockPos.y, VOID);
     }
     if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
-        Vector2 mousePos = GetMousePosition();
-        Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
-        int blockX = (int) worldPos.x / blockSize;
-        int blockY = (int) worldPos.y / blockSize;
-        setCell(grid, blockX, blockY, STONE);
+        Vector2 blockPos = getBlockPosCliqued(camera, blockSize);
+        setCell(grid, (int) blockPos.x, (int) blockPos.y, STONE);
     }
 }
 

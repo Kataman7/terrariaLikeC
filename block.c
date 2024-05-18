@@ -5,7 +5,7 @@
 Block* blocks = NULL;
 
 void createBlocks() {
-    blocks = malloc(20 * sizeof(Block));
+    blocks = malloc(25 * sizeof(Block));
     blocks[VOID] = (Block){VOID, 0, LoadTexture("texture/stone.png")};
     blocks[STONE] = (Block){STONE, SOLID, LoadTexture("texture/stone.png")};
     blocks[STONE_GRASS] = (Block){STONE_GRASS, SOLID, LoadTexture("texture/stone_grass.png")};
@@ -26,7 +26,9 @@ void createBlocks() {
     blocks[TRUNK_MUSHROOM] = (Block){TRUNK_MUSHROOM, SOLID, LoadTexture("texture/trunk_mushroom.png")};
     blocks[STONE_BROKEN] = (Block){STONE_BROKEN, SOLID, LoadTexture("texture/stone_broken.png")};
     blocks[STONE_RED] = (Block){STONE_RED, SOLID, LoadTexture("texture/stone_red.png")};
+    blocks[CURSOR] = (Block){CURSOR, 0, LoadTexture("texture/cursor.png")};
 }
+
 
 void unloadTexture(int i) {
     for (int j = 0; j < i; ++j) {

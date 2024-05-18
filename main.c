@@ -25,6 +25,7 @@ int main() {
 
     SetConfigFlags(FLAG_WINDOW_RESIZABLE | FLAG_MSAA_4X_HINT);
     InitWindow(screenWidth, screenHeight, "TerrariaLike");
+    HideCursor();
 
     SetTargetFPS( 500 );
     //SetTargetFPS( GetMonitorRefreshRate(GetCurrentMonitor()));
@@ -66,10 +67,10 @@ int main() {
 
         updateTick(grid, &lastTime2, 0.5);
         displayPlayer(player);
-        playerUpdate(grid, &player, blockSize, 3000, GetFrameTime(), camera);
-        slimeUpdate(grid, &monster, player, blockSize, 3000, GetFrameTime());
         displayHidbox(monster.entity, YELLOW);
         displayGrid(grid, (float) blockSize, camera);
+        playerUpdate(grid, &player, blockSize, 3000, GetFrameTime(), camera);
+        slimeUpdate(grid, &monster, player, blockSize, 3000, GetFrameTime());
 
         EndMode2D();
 
@@ -78,8 +79,8 @@ int main() {
         EndDrawing();
     }
 
-    unloadTexture(STONE_RED);
     CloseWindow();
+    unloadTexture(CURSOR);
     free(blocks);
     free(grid.list);
 

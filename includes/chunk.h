@@ -28,7 +28,7 @@ struct Grid listNeighbor(struct Grid grid, int x, int y);
 void cleanLava(struct Grid grid);
 void displayGrid(struct Grid grid, float blockSize, Camera2D camera);
 void gridEdit(struct Grid grid, Camera2D camera, int blockSize);
-
+Vector2 getBlockPosCliqued(Camera2D camera, int blockSize);
 
 
 #endif

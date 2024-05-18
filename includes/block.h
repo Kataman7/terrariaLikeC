@@ -24,6 +24,7 @@
 #define TRUNK_MUSHROOM 17
 #define STONE_BROKEN 18
 #define STONE_RED 19
+#define CURSOR 20
 
 //state
 #define SOLID 0
