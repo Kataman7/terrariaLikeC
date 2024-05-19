@@ -16,7 +16,6 @@ struct Slime createSlime(float x, float y, int blockSize) {
     struct Slime slime = {
             entity,
             vector
-
     };
     return slime;
 }
@@ -49,7 +48,7 @@ void slimeUpdate(struct Grid grid, struct Slime *monster, struct Player player, 
 void slimeControl(struct Grid grid, struct Slime* monster, struct Player player, float deltatime, float gravity, int blockSize) {
     Vector2 center = {monster->entity.hidbox.x+monster->entity.hidbox.width/2, monster->entity.hidbox.y+monster->entity.hidbox.height/2};
     if (CheckCollisionCircleRec(center, (float) blockSize*monster->entity.range, player.entity.hidbox)) {
-        if(monster->entity.hidbox.x < player.entity.hidbox.x) moveRight(monster, deltatime);
+        if(monster->entity.hidbox.x < player.entity.hidbox.x) moveRight(&monster->entity, deltatime);
         else moveLeft((struct Entity *) monster, deltatime);
     }
 }

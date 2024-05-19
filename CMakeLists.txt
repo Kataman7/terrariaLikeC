@@ -19,10 +19,12 @@ add_executable(TerrariaLike
         includes/entity.h
         entity.c
         includes/slime.h
-        slime.c)
+        slime.c
+        inventory.c
+        includes/inventory.h)
 
-include_directories(C:\\raylib\\raylib\\src)
-target_link_libraries(TerrariaLike C:\\raylib\\raylib\\src\\libraylib.a)
+include_directories(C:/raylib/raylib/src)
+target_link_libraries(TerrariaLike C:/raylib/raylib/src/libraylib.a)
 target_link_libraries(TerrariaLike winmm.lib)
 
 file(GLOB IMAGES "texture/*.png")
