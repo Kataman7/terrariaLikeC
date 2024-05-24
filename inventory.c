@@ -14,7 +14,7 @@ Inventory createInventory() {
 
 int addItem(Inventory* inventory, Item item) {
     int i = 0;
-    for (i; i < inventory->size; ++i) {
+    for (;i < inventory->size; ++i) {
         if (inventory->items[i].id == 0) {
             inventory->items[i] = item;
             return 1;
@@ -40,3 +40,4 @@ int removeItem(Inventory* inventory, Item item) {
     }
     return 0;
 }
+

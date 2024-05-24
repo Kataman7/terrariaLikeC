@@ -13,9 +13,11 @@ struct Player createPlayer(float x, float y, int blockSize) {
 void mine(struct Player player, struct Grid grid, Camera2D camera, int blockSize) {
     Vector2 center = {player.entity.hidbox.x+player.entity.hidbox.width/2, player.entity.hidbox.y+player.entity.hidbox.height/2};
 
-   // Vector2 mousePos = GetScreenToWorld2D(getBlockPosCliqued(camera, blockSize), camera);
+    Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), camera);
     Vector2 blockPos = getBlockPosCliqued(camera, blockSize);
     Rectangle blockPosHB = {(float) ((int) blockPos.x * blockSize), (float) ((int) blockPos.y * blockSize), (float) blockSize, (float) blockSize };
+    Rectangle cursor = {mousePos.x, mousePos.y, (float)blockSize/6, (float)blockSize/6};
+    DrawRectangleRec(cursor, WHITE);
 
     if (CheckCollisionCircleRec(center, (float) (blockSize*player.entity.range), blockPosHB)) {
         Rectangle sourceRec = {
