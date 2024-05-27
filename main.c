@@ -49,11 +49,13 @@ int main() {
     {
         BeginDrawing();
 
+        /*
         float zoomSpeed = 0.1f;
         float newZoom = camera.zoom - GetMouseWheelMove() * zoomSpeed;
         if (newZoom > 0.1f && newZoom < 5.0f && newZoom != camera.zoom) {
             camera.zoom = newZoom;
         }
+        */
 
         float speed = (float) blockSize * GetFrameTime() * 30;
 

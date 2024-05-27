@@ -171,9 +171,9 @@ void gridEdit(struct Grid grid, Camera2D camera, int blockSize, Inventory* inven
     }
     if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
         Vector2 blockPos = getBlockPosCliqued(camera, blockSize);
-        if (getCell(grid, blockPos.x, blockPos.y) != STONE) {
-            removeItemInventory(inventory, items[STONE]);
-            setCell(grid, (int) blockPos.x, (int) blockPos.y, STONE);
+        if (getCell(grid, blockPos.x, blockPos.y) != getSelectedItemId(*inventory) && getSelectedItemId(*inventory) != 0) {
+            removeItemInventory(inventory, items[getSelectedItemId(*inventory)]);
+            setCell(grid, (int) blockPos.x, (int) blockPos.y, getSelectedItemId(*inventory));
         }
     }
 }

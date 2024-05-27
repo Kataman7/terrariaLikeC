@@ -8,10 +8,10 @@ int currentGui = 0;
 
 void showInventory(Inventory inventory) {
 
+    Color transparentColor = (Color){BLACK.r, BLACK.g, BLACK.b, 128};
     int itemSize = blockSize * 1.5;
-
     Rectangle rectangle = {0, 0, itemSize * 5, itemSize * 5};
-    DrawRectangleRec(rectangle, WHITE);
+    DrawRectangleRec(rectangle, transparentColor);
 
     int counter = 0;
 
@@ -22,6 +22,7 @@ void showInventory(Inventory inventory) {
                     drawBlock(j, i, itemSize, inventory.items[counter].texture);
                     DrawText(TextFormat("%i", inventory.items[counter].quantity), (j+0.5)*itemSize, (i+0.5)*itemSize, itemSize/2, BLACK);
                 }
+                if (counter == inventory.selected) drawBlock(j, i, itemSize, blocks[CURSOR].texture);
             }
             counter++;
         }
