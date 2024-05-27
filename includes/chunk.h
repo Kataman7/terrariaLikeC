@@ -2,6 +2,7 @@
 #define CHUNK_H_INCLUDED
 
 #include <raylib.h>
+#include "inventory.h"
 
 struct Grid {
     int width;
@@ -27,7 +28,7 @@ int equalGrids(struct Grid grid1, struct Grid grid2);
 struct Grid listNeighbor(struct Grid grid, int x, int y);
 void cleanLava(struct Grid grid);
 void displayGrid(struct Grid grid, float blockSize, Camera2D camera);
-void gridEdit(struct Grid grid, Camera2D camera, int blockSize);
+void gridEdit(struct Grid grid, Camera2D camera, int blockSize, Inventory* inventory);
 Vector2 getBlockPosCliqued(Camera2D camera, int blockSize);
 
 

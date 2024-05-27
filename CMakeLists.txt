@@ -21,7 +21,9 @@ add_executable(TerrariaLike
         includes/slime.h
         slime.c
         inventory.c
-        includes/inventory.h)
+        includes/inventory.h
+        gui.c
+        includes/gui.h)
 
 include_directories(C:/raylib/raylib/src)
 target_link_libraries(TerrariaLike C:/raylib/raylib/src/libraylib.a)

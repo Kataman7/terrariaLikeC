@@ -38,9 +38,11 @@ typedef struct {
 } Block;
 
 extern Block* blocks;
+extern int blockSize;
 
 Texture2D* createTexture();
 void createBlocks();
 void unloadTexture(int i);
+void drawBlock(float x, float y, int blockSize, Texture2D texture);
 
 #endif

@@ -3,10 +3,14 @@
 #include "includes/chunk.h"
 #include "includes/block.h"
 #include "stdio.h"
+#include "includes/inventory.h"
+#include "includes/entity.h"
 
 struct Player createPlayer(float x, float y, int blockSize) {
     Rectangle hbox = {x, y, (float) (blockSize*0.95), (float) (blockSize*1.95)};
-    struct Player player = {hbox, 0, 350, 0, 5, 0.45f};
+    struct Entity entity = {hbox, 0, 350, 0, 5, 0.45f};
+    Inventory inventory = createInventory();
+    struct Player player = {entity, inventory};
     return player;
 }
 
@@ -27,7 +31,7 @@ void mine(struct Player player, struct Grid grid, Camera2D camera, int blockSize
                 (float) blocks[CURSOR].texture.height};
         Vector2 origin = {0.0f, 0.0f};
         DrawTexturePro(blocks[CURSOR].texture, sourceRec, blockPosHB, origin, 0.0f, WHITE);
-        gridEdit(grid, camera, blockSize);
+        gridEdit(grid, camera, blockSize, &player.inventory);
     }
 }
 
@@ -38,19 +42,19 @@ void moveUpPlayer(struct Grid grid, struct Player* player, float gravity, int bl
 }
 
 void playerControl(struct Grid grid, struct Player* player, float deltatime, float gravity, Camera2D camera, int blockSize) {
-    if (IsKeyDown(KEY_UP)) moveUpPlayer(grid, player, gravity, blockSize);
-    if (IsKeyPressed(KEY_UP)) moveUP( &player->entity, gravity);
-    if (IsKeyDown(KEY_DOWN)) moveDown(&player->entity, deltatime);
-    if (IsKeyDown(KEY_LEFT)) moveLeft(&player->entity, deltatime);
-    if (IsKeyDown(KEY_RIGHT)) moveRight(&player->entity, deltatime);
+    if (IsKeyDown(KEY_W)) moveUpPlayer(grid, player, gravity, blockSize);
+    if (IsKeyPressed(KEY_W)) moveUP( &player->entity, gravity);
+    if (IsKeyDown(KEY_S)) moveDown(&player->entity, deltatime);
+    if (IsKeyDown(KEY_A)) moveLeft(&player->entity, deltatime);
+    if (IsKeyDown(KEY_D)) moveRight(&player->entity, deltatime);
     mine(*player, grid, camera, blockSize);
 }
 
 void cameraControl(Camera2D *camera, float speed) {
-    if (IsKeyDown(KEY_UP)) camera->target.y -= speed;
-    if (IsKeyDown(KEY_DOWN)) camera->target.y += speed;
-    if (IsKeyDown(KEY_LEFT)) camera->target.x -= speed;
-    if (IsKeyDown(KEY_RIGHT)) camera->target.x += speed;
+    if (IsKeyDown(KEY_W)) camera->target.y -= speed;
+    if (IsKeyDown(KEY_S)) camera->target.y += speed;
+    if (IsKeyDown(KEY_Q)) camera->target.x -= speed;
+    if (IsKeyDown(KEY_D)) camera->target.x += speed;
 }
 
 void displayPlayer(struct Player player) {

@@ -9,6 +9,7 @@
 #include "time.h"
 #include "includes/slime.h"
 #include "includes/entity.h"
+#include "includes/gui.h"
 
 int main() {
 
@@ -17,7 +18,6 @@ int main() {
     srand(seed);
 
     struct Grid grid = createGrid(40 * 6, 40 * 6);
-    int blockSize = 45;
     generateLand(grid, 10);
 
     const int screenWidth = 40 * blockSize;
@@ -33,6 +33,7 @@ int main() {
     //Texture2D* textures = createTexture();
     //blocks = malloc(20 * sizeof(Block));
     createBlocks();
+    createItems();
 
 
     Camera2D camera = { 0 };
@@ -74,6 +75,8 @@ int main() {
 
         EndMode2D();
 
+        guiControl();
+        guiUpdate(player);
         DrawFPS(0, 0);
 
         EndDrawing();

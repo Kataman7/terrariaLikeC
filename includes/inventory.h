@@ -1,9 +1,12 @@
 #ifndef INVENTORY_H
 #define INVENTORY_H
 
+#include "raylib.h"
+
 typedef struct {
     int id;
     int quantity;
+    Texture2D texture;
 } Item;
 
 typedef struct {
@@ -11,8 +14,11 @@ typedef struct {
     int size;
 } Inventory;
 
+extern Item* items;
+
 Inventory createInventory();
-int addItem(Inventory* inventory, Item item);
-int removeItem(Inventory* inventory, Item item);
+int addItemInventory(Inventory* inventory, Item item);
+int removeItemInventory(Inventory* inventory, Item item);
+void createItems();
 
 #endif

@@ -4,9 +4,11 @@
 #include "chunk.h"
 #include "raylib.h"
 #include "entity.h"
+#include "inventory.h"
 
 struct Player {
     struct Entity entity;
+    Inventory inventory;
 };
 
 void playerControl(struct Grid grid, struct Player* player, float deltatime, float gravity, Camera2D camera, int blockSize);

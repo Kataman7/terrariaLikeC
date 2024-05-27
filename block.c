@@ -2,6 +2,8 @@
 #include "includes/block.h"
 #include <stdlib.h>
 
+int blockSize = 45;
+
 Block* blocks = NULL;
 
 void createBlocks() {
@@ -34,4 +36,11 @@ void unloadTexture(int i) {
     for (int j = 0; j < i; ++j) {
         UnloadTexture(blocks->texture);
     }
+}
+
+void drawBlock(float x, float y, int blockSize, Texture2D texture) {
+    Rectangle destRec = {x * blockSize, y * blockSize, blockSize, blockSize};
+    Rectangle sourceRec = { 0.0f,0.0f,(float) texture.width,(float) texture.height};
+    Vector2 origin = {0.0f, 0.0f};
+    DrawTexturePro(texture, sourceRec, destRec, origin, 0.0f, WHITE);
 }

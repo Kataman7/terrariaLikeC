@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "includes/block.h"
 #include "includes/land.h"
+#include "includes/player.h"
 
 struct Grid createGrid(int width, int height) {
     struct Grid grid = {width, height, calloc(width * height, sizeof(int))};
@@ -146,16 +147,9 @@ void displayGrid(struct Grid grid, float blockSize, Camera2D camera) {
     // Dessiner uniquement les blocs visibles à l'écran
     for (int i = minY; i < maxY; ++i) {
         for (int j = minX; j < maxX; ++j) {
-            Rectangle destRec = {(float) j * blockSize, (float) i * blockSize, blockSize, blockSize};
             int cellValue = getCell(grid, j, i);
             if (cellValue != blocks[VOID].id) {
-                Rectangle sourceRec = {
-                        0.0f,
-                        0.0f,
-                        (float) blocks[cellValue].texture.width,
-                        (float) blocks[cellValue].texture.height};
-                Vector2 origin = {0.0f, 0.0f};
-                DrawTexturePro(blocks[cellValue].texture, sourceRec, destRec, origin, 0.0f, WHITE);
+                drawBlock(j, i, blockSize, blocks[cellValue].texture);
             }
         }
     }
@@ -165,19 +159,22 @@ Vector2 getBlockPosCliqued(Camera2D camera, int blockSize) {
     Vector2 mousePos = GetMousePosition();
     Vector2 worldPos = GetScreenToWorld2D(mousePos, camera);
     Vector2 blockPos = {worldPos.x / (float) blockSize, worldPos.y / (float) blockSize};
-    printf("x%i, y%i\n", (int) blockPos.x, (int) blockPos.y);
     return blockPos;
 }
 
-void gridEdit(struct Grid grid, Camera2D camera, int blockSize) {
+void gridEdit(struct Grid grid, Camera2D camera, int blockSize, Inventory* inventory) {
     if (IsKeyPressed(KEY_SPACE)) generateLand(grid, 25);
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
         Vector2 blockPos = getBlockPosCliqued(camera, blockSize);
+        addItemInventory(inventory, items[getCell(grid, blockPos.x, blockPos.y)]);
         setCell(grid, (int) blockPos.x, (int) blockPos.y, VOID);
     }
     if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
         Vector2 blockPos = getBlockPosCliqued(camera, blockSize);
-        setCell(grid, (int) blockPos.x, (int) blockPos.y, STONE);
+        if (getCell(grid, blockPos.x, blockPos.y) != STONE) {
+            removeItemInventory(inventory, items[STONE]);
+            setCell(grid, (int) blockPos.x, (int) blockPos.y, STONE);
+        }
     }
 }
 
