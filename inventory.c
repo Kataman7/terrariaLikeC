@@ -64,23 +64,21 @@ void moveSelectedLeftInventory(Inventory *inventory) {
     if (inventory->selected >= inventory->size) inventory->selected = 0;
 }
 
+static int columns = 5;
 void moveSelectedUpInventory(Inventory *inventory) {
-
-    if (inventory->selected > inventory->size-6) inventory->selected = 0;
-    else {
-        inventory->selected+=5;
-        if (inventory->selected >= inventory->size) inventory->selected = 0;
+    inventory->selected -= columns;
+    if (inventory->selected < 0) {
+        inventory->selected += inventory->size;
     }
 }
 
-void moveSelectedDowntInventory(Inventory *inventory) {
-
-    if (inventory->selected < 4) inventory->selected = inventory->size-1;
-    else {
-        inventory->selected-=5;
-        if (inventory->selected < 0) inventory->selected = inventory->size-1;
+void moveSelectedDownInventory(Inventory *inventory) {
+    inventory->selected += columns;
+    if (inventory->selected >= inventory->size) {
+        inventory->selected -= inventory->size;
     }
 }
+
 
 int getSelectedItemId(Inventory inventory) {
     return inventory.items[inventory.selected].id;

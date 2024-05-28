@@ -54,7 +54,7 @@ void playerControl(struct Grid grid, struct Player *player, float deltatime, flo
         else moveSelectedLeftInventory(&player->inventory);
     }
     else if ((int) GetMouseWheelMove() == 1) {
-        if (IsKeyDown(KEY_LEFT_SHIFT)) moveSelectedDowntInventory(&player->inventory);
+        if (IsKeyDown(KEY_LEFT_SHIFT)) moveSelectedDownInventory(&player->inventory);
         else  moveSelectedRightInventory(&player->inventory);
     }
 

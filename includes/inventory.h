@@ -25,7 +25,7 @@ void moveSelectedRightInventory(Inventory *inventory);
 void moveSelectedLeftInventory(Inventory *inventory);
 int getSelectedItemId(Inventory inventory);
 void moveSelectedUpInventory(Inventory *inventory);
-void moveSelectedDowntInventory(Inventory *inventory);
+void moveSelectedDownInventory(Inventory *inventory);
 
 
 #endif
