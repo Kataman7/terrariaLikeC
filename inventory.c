@@ -54,14 +54,32 @@ int removeItemInventory(Inventory *inventory, Item item) {
     return 0; // Item non trouvé
 }
 
-void moveSelectedUpInventory(Inventory *inventory) {
+void moveSelectedRightInventory(Inventory *inventory) {
     inventory->selected--;
     if (inventory->selected < 0) inventory->selected = inventory->size-1;
 }
 
-void moveSelectedDownInventory(Inventory *inventory) {
+void moveSelectedLeftInventory(Inventory *inventory) {
     inventory->selected++;
     if (inventory->selected >= inventory->size) inventory->selected = 0;
+}
+
+void moveSelectedUpInventory(Inventory *inventory) {
+
+    if (inventory->selected > inventory->size-6) inventory->selected = 0;
+    else {
+        inventory->selected+=5;
+        if (inventory->selected >= inventory->size) inventory->selected = 0;
+    }
+}
+
+void moveSelectedDowntInventory(Inventory *inventory) {
+
+    if (inventory->selected < 4) inventory->selected = inventory->size-1;
+    else {
+        inventory->selected-=5;
+        if (inventory->selected < 0) inventory->selected = inventory->size-1;
+    }
 }
 
 int getSelectedItemId(Inventory inventory) {

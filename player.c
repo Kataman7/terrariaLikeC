@@ -42,15 +42,22 @@ void moveUpPlayer(struct Grid grid, struct Player *player, float gravity, int bl
     }
 }
 
-void playerControl(struct Grid grid, struct Player *player, float deltatime, float gravity, Camera2D camera,
-                   int blockSize) {
+void playerControl(struct Grid grid, struct Player *player, float deltatime, float gravity, Camera2D camera, int blockSize) {
     if (IsKeyDown(KEY_W)) moveUpPlayer(grid, player, gravity, blockSize);
     if (IsKeyPressed(KEY_W)) moveUP(&player->entity, gravity);
     if (IsKeyDown(KEY_S)) moveDown(&player->entity, deltatime);
     if (IsKeyDown(KEY_A)) moveLeft(&player->entity, deltatime);
     if (IsKeyDown(KEY_D)) moveRight(&player->entity, deltatime);
-    if ((int) GetMouseWheelMove() == -1) moveSelectedDownInventory(&player->inventory);
-    else if ((int) GetMouseWheelMove() == 1) moveSelectedUpInventory(&player->inventory);
+
+    if ((int) GetMouseWheelMove() == -1) {
+        if (IsKeyDown(KEY_LEFT_SHIFT)) moveSelectedUpInventory(&player->inventory);
+        else moveSelectedLeftInventory(&player->inventory);
+    }
+    else if ((int) GetMouseWheelMove() == 1) {
+        if (IsKeyDown(KEY_LEFT_SHIFT)) moveSelectedDowntInventory(&player->inventory);
+        else  moveSelectedRightInventory(&player->inventory);
+    }
+
     mine(*player, grid, camera, blockSize);
 }
 
