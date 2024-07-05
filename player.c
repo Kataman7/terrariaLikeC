@@ -8,7 +8,7 @@
 
 struct Player createPlayer(float x, float y, int blockSize) {
     Rectangle hbox = {x, y, (float) (blockSize * 0.95), (float) (blockSize * 1.95)};
-    struct Entity entity = {hbox, 0, 350, 0, 5, 0.45f};
+    struct Entity entity = {hbox, 0, 0, 350, 0, 5, 0.45f};
     Inventory inventory = createInventory();
     struct Player player = {entity, inventory};
     return player;
@@ -30,7 +30,10 @@ void mine(struct Player player, struct Grid grid, Camera2D camera, int blockSize
     DrawRectangleRec(cursor, WHITE);
 
     if (CheckCollisionCircleRec(center, (float) (blockSize * player.entity.range), blockPosHB)) {
-        drawBlock(blockPosHB.x / blockSize, blockPosHB.y / blockSize, blockSize, blocks[CURSOR].texture);
+        Texture2D handBlockTexture = blocks[CURSOR].texture;
+        if (getSelectedItemId(player.inventory) != 0) handBlockTexture = blocks[getSelectedItemId(player.inventory)].texture;
+
+        drawBlock(blockPosHB.x / blockSize, blockPosHB.y / blockSize, blockSize, handBlockTexture);
         gridEdit(grid, camera, blockSize, &player.inventory);
     }
 }
@@ -38,7 +41,7 @@ void mine(struct Player player, struct Grid grid, Camera2D camera, int blockSize
 void moveUpPlayer(struct Grid grid, struct Player *player, float gravity, int blockSize) {
     if (checkCollisionState(grid, player->entity, blockSize) == LADDER || checkCollisionState(
             grid, player->entity, blockSize) == LIQUID) {
-        player->entity.velocity = -gravity * player->entity.jumpPower / 4;
+        player->entity.velY = -gravity * player->entity.jumpPower / 4;
     }
 }
 
@@ -77,14 +80,14 @@ void playerUpdate(struct Grid grid, struct Player *player, int blockSize, float 
     float previousX = player->entity.hidbox.x;
     float previousY = player->entity.hidbox.y;
 
-    player->entity.velocity += gravity * deltaTime;
-    player->entity.hidbox.y += player->entity.velocity * deltaTime;
+    player->entity.velY += gravity * deltaTime;
+    player->entity.hidbox.y += player->entity.velY * deltaTime;
 
     Rectangle verticalCollision = checkCollision(grid, player->entity, blockSize);
     if (verticalCollision.x != 0) {
-        if (player->entity.velocity > 0) player->entity.jumpCount = 0;
+        if (player->entity.velY > 0) player->entity.jumpCount = 0;
         player->entity.hidbox.y = previousY;
-        player->entity.velocity = 0;
+        player->entity.velY = 0;
     }
 
     playerControl(grid, player, deltaTime, gravity, camera, blockSize);

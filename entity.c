@@ -3,7 +3,6 @@
 #include "raylib.h"
 #include "includes/block.h"
 
-
 Rectangle checkCollision(struct Grid grid, struct Entity entity, int blockSize) {
 
     float blockX = entity.hidbox.x / (float) blockSize;
@@ -44,7 +43,7 @@ int checkCollisionState(struct Grid grid, struct Entity entity, int blockSize) {
 
 void moveUP(struct Entity* entity, float gravity) {
     if (entity->jumpCount < 2) {
-        entity->velocity = -gravity * entity->jumpPower;
+        entity->velY = -gravity * entity->jumpPower;
         entity->jumpCount ++;
     }
 }

@@ -25,17 +25,17 @@ void slimeUpdate(struct Grid grid, struct Slime *monster, struct Player player, 
     float previousX = monster->entity.hidbox.x;
     float previousY = monster->entity.hidbox.y;
 
-    monster->entity.velocity += gravity * deltaTime;
-    monster->entity.hidbox.y += monster->entity.velocity * deltaTime;
+    monster->entity.velY += gravity * deltaTime;
+    monster->entity.hidbox.y += monster->entity.velY * deltaTime;
 
     Rectangle verticalCollision = checkCollision(grid, monster->entity, blockSize);
     if (verticalCollision.x != 0) {
         monster->entity.hidbox.y = previousY;
-        monster->entity.velocity = 0;
+        monster->entity.velY = 0;
         monster->entity.jumpCount = 0;
     }
 
-    slimeControl(grid, monster, player, deltaTime, gravity, blockSize);
+    slimeControl(monster, player, deltaTime, blockSize);
 
     // collision horizontale après gestion des mouvements horizontaux
     Rectangle horizontalCollision = checkCollision(grid, monster->entity, blockSize);
@@ -45,7 +45,7 @@ void slimeUpdate(struct Grid grid, struct Slime *monster, struct Player player, 
     }
 }
 
-void slimeControl(struct Grid grid, struct Slime* monster, struct Player player, float deltatime, float gravity, int blockSize) {
+void slimeControl(struct Slime* monster, struct Player player, float deltatime, int blockSize) {
     Vector2 center = {monster->entity.hidbox.x+monster->entity.hidbox.width/2, monster->entity.hidbox.y+monster->entity.hidbox.height/2};
     if (CheckCollisionCircleRec(center, (float) blockSize*monster->entity.range, player.entity.hidbox)) {
         if(monster->entity.hidbox.x < player.entity.hidbox.x) moveRight(&monster->entity, deltatime);

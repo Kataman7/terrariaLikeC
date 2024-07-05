@@ -6,7 +6,8 @@
 
 struct Entity {
     Rectangle hidbox;
-    float velocity;
+    float velX;
+    float velY;
     float speed;
     int jumpCount;
     int range;

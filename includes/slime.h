@@ -11,7 +11,7 @@ struct Slime {
     Vector2 target;
 };
 
-void slimeControl(struct Grid grid, struct Slime* slime, struct Player player, float deltatime, float gravity, int blockSize);
+void slimeControl(struct Slime* slime, struct Player player, float deltatime, int blockSize);
 void slimeUpdate(struct Grid grid, struct Slime *slime, struct Player player, int blockSize, float gravity, float deltaTime);
 struct Slime createSlime(float x, float y, int blockSize);
 

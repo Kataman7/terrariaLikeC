@@ -5,15 +5,16 @@
 Item *items = NULL;
 
 void createItems() {
-    items = malloc(50 * sizeof(Item));
-    for (int i = 0; i < CURSOR - 1; ++i) {
+    int size = CURSOR + 2;
+    items = malloc(size * sizeof(Item));
+    for (int i = 0; i < size - 1; ++i) {
         Item item = {blocks[i].id, 1, blocks[i].texture};
         items[i] = item;
     }
 }
 
 Inventory createInventory() {
-    int size = 20;
+    int size = CURSOR;
     Item *items = malloc(size * sizeof(Item));
     Inventory inventory = {items, size, 0};
     for (int i = 0; i < size; ++i) {
@@ -40,6 +41,11 @@ int addItemInventory(Inventory *inventory, Item item) {
     return 0;
 }
 
+int addItemInventoryQuantity(Inventory *inventory, Item item, int quantity) {
+    item.quantity = quantity;
+    return addItemInventory(inventory, item);
+}
+
 int removeItemInventory(Inventory *inventory, Item item) {
     for (int i = 0; i < inventory->size; ++i) {
         if (inventory->items[i].id == item.id) {
@@ -51,7 +57,7 @@ int removeItemInventory(Inventory *inventory, Item item) {
             return 1;
         }
     }
-    return 0; // Item non trouvé
+    return 0;
 }
 
 void moveSelectedRightInventory(Inventory *inventory) {
@@ -78,7 +84,6 @@ void moveSelectedDownInventory(Inventory *inventory) {
         inventory->selected -= inventory->size;
     }
 }
-
 
 int getSelectedItemId(Inventory inventory) {
     return inventory.items[inventory.selected].id;

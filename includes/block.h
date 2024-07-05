@@ -19,12 +19,19 @@
 #define TRUNK_PURPLE 12
 #define LEAVES_GREEN 13
 #define LAVA 14
+#define LAVA_HEAD 25
+#define LAVA_QUEUE 26
 #define TRUNK_BLUE 15
 #define TRUNK_YELLOW 16
 #define TRUNK_MUSHROOM 17
 #define STONE_BROKEN 18
 #define STONE_RED 19
-#define CURSOR 20
+#define CHEST_PURPLE 20
+#define CHEST_BLUE 21
+#define WIRE 22
+#define WIRE_QUEUE 23
+#define WIRE_HEAD 24
+#define CURSOR 27
 
 //state
 #define SOLID 0

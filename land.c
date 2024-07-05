@@ -66,7 +66,7 @@ void generateLand(struct Grid grid, int max_step) {
     caveDecoration(grid);
     cleanLava(grid);
     treeGeneration(grid);
-
+    free(altitude);
 }
 
 void treeGeneration(struct Grid grid) {

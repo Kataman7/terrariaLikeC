@@ -10,6 +10,10 @@
 #include "includes/slime.h"
 #include "includes/entity.h"
 #include "includes/gui.h"
+#include "includes/inventory.h"
+
+#define WIDTH 1000
+#define HEIGHT 1000
 
 int main() {
 
@@ -17,7 +21,7 @@ int main() {
     printf("Seed: %u\n", seed);
     srand(seed);
 
-    struct Grid grid = createGrid(40 * 6, 40 * 6);
+    struct Grid grid = createGrid(WIDTH, HEIGHT);
     generateLand(grid, 10);
 
     const int screenWidth = 40 * blockSize;
@@ -35,13 +39,17 @@ int main() {
     createBlocks();
     createItems();
 
-
     Camera2D camera = { 0 };
     camera.target = (Vector2){ ((float)grid.width/2)*(float)blockSize, ((float)grid.height/2)*(float)blockSize };
     camera.zoom = 1.0f;
 
-    struct Player player = createPlayer(camera.target.x, camera.target.y, blockSize);
+    struct Player player = createPlayer(camera.target.x, camera.target.y - (blockSize*HEIGHT)/2, blockSize);
     struct Slime monster = createSlime(camera.target.x, camera.target.y, blockSize);
+
+    for (int i = 0; i < 100; ++i) {
+        addItemInventory(&player.inventory, items[WIRE]);
+        addItemInventory(&player.inventory, items[WIRE_HEAD]);
+    }
 
     double lastTime2 = GetTime();
 

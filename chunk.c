@@ -118,14 +118,6 @@ void printGrid(struct Grid grid) {
     }
 }
 
-int max(int a, int b) {
-    return (a > b) ? a : b;
-}
-
-int min(int a, int b) {
-    return (a < b) ? a : b;
-}
-
 void displayGrid(struct Grid grid, float blockSize, Camera2D camera) {
 
     // Calculer les limites de la grille visible à l'écran
@@ -139,10 +131,10 @@ void displayGrid(struct Grid grid, float blockSize, Camera2D camera) {
     int maxY = (int)(maxScreen.y / blockSize) + 1;
 
     // Clipper les limites aux limites de la grille
-    minX = max(0, minX);
-    minY = max(0, minY);
-    maxX = min(grid.width, maxX);
-    maxY = min(grid.height, maxY);
+    minX = MAX(0, minX);
+    minY = MAX(0, minY);
+    maxX = MIN(grid.width, maxX);
+    maxY = MIN(grid.height, maxY);
 
     // Dessiner uniquement les blocs visibles à l'écran
     for (int i = minY; i < maxY; ++i) {
