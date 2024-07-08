@@ -76,7 +76,7 @@ int main() {
         Color skyColor = {225,246,255};
         ClearBackground(skyColor);
 
-        updateTick(grid, &lastTime2, 0.5);
+        updateTick(grid, &lastTime2, 0.5, 0);
         displayPlayer(player);
         displayHidbox(monster.entity, YELLOW);
         displayGrid(grid, (float) blockSize, camera);

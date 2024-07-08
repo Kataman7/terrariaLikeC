@@ -5,8 +5,8 @@
 
 void generateVine(struct Grid grid);
 void nextVineGeneration(struct Grid grid, struct Grid nextGrid, int x, int y);
-void nextWaterGeneration(struct Grid grid, struct Grid nextGrid, int x, int y);
-void updateTick(struct Grid grid, double *lastTime, double tickTime);
+void nextLiquidGeneration(struct Grid grid, struct Grid nextGrid, int x, int y);
+void updateTick(struct Grid grid, double *lastTime, double tickTime, int start);
 void generateDirt(struct Grid grid, double chanceToLive, int mineralValue, int iteration, int deadValue);
 void caveGeneration(struct Grid grid);
 void caveDecoration(struct Grid grid);

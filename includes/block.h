@@ -19,8 +19,8 @@
 #define TRUNK_PURPLE 12
 #define LEAVES_GREEN 13
 #define LAVA 14
-#define LAVA_HEAD 25
-#define LAVA_QUEUE 26
+#define LAVA_SOURCE 25
+#define WATER 26
 #define TRUNK_BLUE 15
 #define TRUNK_YELLOW 16
 #define TRUNK_MUSHROOM 17
@@ -31,7 +31,9 @@
 #define WIRE 22
 #define WIRE_QUEUE 23
 #define WIRE_HEAD 24
-#define CURSOR 27
+#define WATER_SOURCE 27
+#define SAND 28
+#define CURSOR 29
 
 //state
 #define SOLID 0

@@ -7,7 +7,7 @@ int blockSize = 45;
 Block* blocks = NULL;
 
 void createBlocks() {
-    blocks = malloc(30 * sizeof(Block));
+    blocks = malloc(40 * sizeof(Block));
     blocks[VOID] = (Block){VOID, 0, LoadTexture("texture/stone.png")};
     blocks[STONE] = (Block){STONE, SOLID, LoadTexture("texture/stone.png")};
     blocks[STONE_GRASS] = (Block){STONE_GRASS, SOLID, LoadTexture("texture/stone_grass.png")};
@@ -23,8 +23,7 @@ void createBlocks() {
     blocks[TRUNK_PURPLE] = (Block){TRUNK_PURPLE, SOLID, LoadTexture("texture/trunk_purple.png")};
     blocks[LEAVES_GREEN] = (Block){LEAVES_GREEN, SOLID, LoadTexture("texture/leaves_green.png")};
     blocks[LAVA] = (Block){LAVA, LIQUID, LoadTexture("texture/lava.png")};
-    blocks[LAVA_HEAD] = (Block){LAVA_HEAD, LIQUID, LoadTexture("texture/lava.png")};
-    blocks[LAVA_QUEUE] = (Block){LAVA_QUEUE, LIQUID, LoadTexture("texture/leaves_orange.png")};
+    blocks[LAVA_SOURCE] = (Block){LAVA_SOURCE, LIQUID, LoadTexture("texture/lava.png")};
     blocks[TRUNK_BLUE] = (Block){TRUNK_BLUE, SOLID, LoadTexture("texture/trunk_blue.png")};
     blocks[TRUNK_YELLOW] = (Block){TRUNK_YELLOW, SOLID, LoadTexture("texture/trunk_yellow.png")};
     blocks[TRUNK_MUSHROOM] = (Block){TRUNK_MUSHROOM, SOLID, LoadTexture("texture/trunk_mushroom.png")};
@@ -35,6 +34,9 @@ void createBlocks() {
     blocks[WIRE] = (Block){WIRE, SOLID, LoadTexture("texture/wire_off.png")};
     blocks[WIRE_QUEUE] = (Block){WIRE_QUEUE, SOLID, LoadTexture("texture/wire_off.png")};
     blocks[WIRE_HEAD] = (Block){WIRE_HEAD, SOLID, LoadTexture("texture/wire_on.png")};
+    blocks[WATER] = (Block){WATER, LIQUID, LoadTexture("texture/water.png")};
+    blocks[WATER_SOURCE] = (Block){WATER_SOURCE, LIQUID, LoadTexture("texture/water.png")};
+    blocks[SAND] = (Block){SAND, SOLID, LoadTexture("texture/sand.png")};
     blocks[CURSOR] = (Block){CURSOR, 0, LoadTexture("texture/cursor.png")};
 }
 

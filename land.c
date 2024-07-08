@@ -31,42 +31,49 @@ int *createAltitude(int length, int max) {
     return terrain;
 }
 
-
-
 void cleanLand(struct Grid grid) {
     for (int i = 0; i < grid.height; ++i) {
         for (int j = 0; j < grid.width; ++j) {
             if (getCell(grid, j, i) == VOID && countNeighbor(grid, STONE, j, i) > 2 &&
                 countNeighbor(grid, DIRT, j, i) > 2)
                 setCell(grid, j, i, STONE);
-
         }
     }
 }
 
-void generateLand(struct Grid grid, int max_step) {
+int generateOcean(struct Grid grid, int* altitude) {
+    int counter = 0;
+    for (int i = 0; i < grid.width; ++i) {
+        if (altitude[i] > 28) {
+            counter++;
+            if (getCell(grid, i, altitude[i] + 5) == VOID)
+                setCell(grid, i, altitude[i] + 5, WATER_SOURCE);
+        }
+    }
+    return counter;
+}
 
-    int *altitude = createAltitude(grid.width, 30);
-
+void generateSand(struct Grid grid) {
     for (int i = 0; i < grid.height; ++i) {
         for (int j = 0; j < grid.width; ++j) {
-            if (i < altitude[j] + 1) setCell(grid, j, i + sky, VOID);
-            else if (i == altitude[j] + 1) setCell(grid, j, i + sky, DIRT_GRASS);
-            else if (i > altitude[j] + 1 && i < altitude[j] + 3) setCell(grid, j, i + sky, DIRT);
-            else if (i >= altitude[j] + 3 && i < altitude[j] + 6) setCell(grid, j, i + sky, STONE);
-            else if (i >= altitude[j] + 5) {
-                if (((double) rand() / RAND_MAX) > 0.5) setCell(grid, j, i + sky, VOID);
-                else setCell(grid, j, i + sky, STONE);
+            if (getCell(grid, j, i) == DIRT_GRASS) {
+                if (getCell(grid, j, i-1) == WATER_SOURCE) setCell(grid, j, i, SAND);
+                else if (getCell(grid, j, i+1) == WATER_SOURCE) setCell(grid, j, i, SAND);
+                else if (getCell(grid, j+1, i) == WATER_SOURCE) setCell(grid, j, i, SAND);
+                else if (getCell(grid, j-1, i) == WATER_SOURCE) setCell(grid, j, i, SAND);
             }
         }
     }
+}
 
-    caveGeneration(grid);
-    cleanLand(grid);
-    caveDecoration(grid);
-    cleanLava(grid);
-    treeGeneration(grid);
-    free(altitude);
+void cleanSand(struct Grid grid) {
+    for (int i = 0; i < grid.height; ++i) {
+        for (int j = 0; j < grid.width; ++j) {
+            if (getCell(grid, j, i) == DIRT_GRASS) {
+                if (getCell(grid, j, i+1) == SAND) setCell(grid, j, i, SAND);
+            }
+        }
+    }
 }
 
 void treeGeneration(struct Grid grid) {
@@ -92,3 +99,38 @@ void treeGeneration(struct Grid grid) {
     }
 }
 
+
+void generateLand(struct Grid grid, int max_step) {
+
+    int *altitude = createAltitude(grid.width, 30);
+
+    for (int i = 0; i < grid.height; ++i) {
+        for (int j = 0; j < grid.width; ++j) {
+            if (i < altitude[j] + 1) setCell(grid, j, i + sky, VOID);
+            else if (i == altitude[j] + 1) setCell(grid, j, i + sky, DIRT_GRASS);
+            else if (i > altitude[j] + 1 && i < altitude[j] + 3) setCell(grid, j, i + sky, DIRT);
+            else if (i >= altitude[j] + 3 && i < altitude[j] + 6) setCell(grid, j, i + sky, STONE);
+            else if (i >= altitude[j] + 5) {
+                if (((double) rand() / RAND_MAX) > 0.5) setCell(grid, j, i + sky, VOID);
+                else setCell(grid, j, i + sky, STONE);
+            }
+        }
+    }
+
+    caveGeneration(grid);
+    cleanLand(grid);
+    caveDecoration(grid);
+    cleanLava(grid);
+
+    int iteration = generateOcean(grid, altitude);
+    for (int i = 0; i < iteration*2; ++i) {
+       updateTick(grid, 0, 0, 1);
+    }
+    cleanSand(grid);
+
+    generateSand(grid);
+    generateDirt(grid, 0, SAND, 4, DIRT);
+    
+    treeGeneration(grid);
+    free(altitude);
+}

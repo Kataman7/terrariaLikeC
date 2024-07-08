@@ -1,6 +1,9 @@
 #include "includes/chunk.h"
 #include "includes/block.h"
 #include "includes/cave.h"
+
+#include <stdio.h>
+
 #include "stdlib.h"
 
 void caveGeneration(struct Grid grid) {
@@ -76,106 +79,68 @@ void nextVineGeneration(struct Grid grid, struct Grid nextGrid, int x, int y) {
     else if (getCell(grid, x, y + 1) == VOID) setCell(nextGrid, x, y + 1, VINE);
 }
 
-void nextWaterGeneration(struct Grid grid, struct Grid nextGrid, int x, int y) {
-
-    if (getCell(grid, x, y) == LAVA) setCell(nextGrid, x, y, -1);
-    if (getCell(grid, x, y) == VOID || getCell(grid, x, y) == LAVA) {
-        if (getCell(grid, x, y-1) == LAVA || getCell(grid, x, y-1) == LAVA_HEAD) setCell(nextGrid, x, y, LAVA);
+void generateLiquid(int liquid, int liquid_source, struct Grid grid, struct Grid nextGrid, int x, int y) {
+    //if (getCell(grid, x, y) == VOID && countNeighbor(grid, liquid_source, x, y) >= 5) setCell(grid, x, y, liquid_source);
+    if (getCell(grid, x, y) == liquid) {
+        setCell(nextGrid, x, y, -1);
+    }
+    if (getCell(grid, x, y) == VOID || getCell(grid, x, y) == liquid) {
+        if (getCell(grid, x, y-1) == liquid || getCell(grid, x, y-1) == liquid_source) setCell(nextGrid, x, y, liquid);
         else {
-
-            if (getCell(grid, x-1, y) == LAVA || getCell(grid, x-1, y) == LAVA_HEAD) {
-                if (getCell(grid, x-1, y+1) != VOID && getCell(grid, x-1, y+1) != LAVA) {
-                    setCell(nextGrid, x, y, LAVA);
+            if (getCell(grid, x-1, y) == liquid || getCell(grid, x-1, y) == liquid_source) {
+                if (getCell(grid, x-1, y+1) != VOID && getCell(grid, x-1, y+1) != liquid) {
+                    setCell(nextGrid, x, y, liquid);
                 }
             }
-
-            /*
-
-            if (getCell(grid, x+1, y) != VOID || getCell(grid, x-1, y) != VOID) {
-                if (getCell(grid, x+1, y) != LAVA || getCell(grid, x-1, y) != LAVA) {
-                    if (getCell(grid, x+1, y) == LAVA || getCell(grid, x+1, y) == LAVA_HEAD) setCell(nextGrid, x, y, LAVA);
-                    else if (getCell(grid, x-1, y) == LAVA || getCell(grid, x-1, y) == LAVA_HEAD) setCell(nextGrid, x, y, LAVA);
+            if (getCell(grid, x+1, y) == liquid || getCell(grid, x+1, y) == liquid_source) {
+                if (getCell(grid, x+1, y+1) != VOID && getCell(grid, x+1, y+1) != liquid) {
+                    setCell(nextGrid, x, y, liquid);
                 }
             }
-
-            */
         }
-    }
-
-    /*
-     *
-     *ocena
-     *
-    *if (getCell(grid, x, y) == LAVA) {
-    setCell(nextGrid, x, y, -1);  // Efface la cellule actuelle de lave
-
-    // Essaye de déplacer la lave vers le bas
-    if (getCell(grid, x, y - 1) == VOID) {
-        setCell(nextGrid, x, y - 1, LAVA);
-    }
-    // Sinon, essaye de déplacer la lave vers la gauche ou la droite
-    else if (getCell(grid, x - 1, y) == VOID) {
-        setCell(nextGrid, x - 1, y, LAVA);
-    }
-    else if (getCell(grid, x + 1, y) == VOID) {
-        setCell(nextGrid, x + 1, y, LAVA);
-    }
-    // Sinon, laisse la lave à sa position actuelle
-    else {
-        setCell(nextGrid, x, y, LAVA);
-    }
-} else if (getCell(grid, x, y) == VOID) {
-    // La logique de remplissage pour les cellules vides
-    if (getCell(grid, x, y - 1) == LAVA || getCell(grid, x, y - 1) == LAVA_HEAD) {
-        setCell(nextGrid, x, y, LAVA);
-    } else if (getCell(grid, x - 1, y) == LAVA || getCell(grid, x - 1, y) == LAVA_HEAD) {
-        setCell(nextGrid, x, y, LAVA);
-    } else if (getCell(grid, x + 1, y) == LAVA || getCell(grid, x + 1, y) == LAVA_HEAD) {
-        setCell(nextGrid, x, y, LAVA);
     }
 }
 
----
-    if (getCell(grid, x, y) == LAVA) {
-        if (countNeighbor(grid, LAVA_HEAD, x, y) < 1 || getCell(grid, x, y - 1) < 2) setCell(nextGrid, x, y, -1);
-    }
-
-    if (getCell(grid, x, y + 1) == VOID) setCell(nextGrid, x, y + 1, LAVA);
-    else if (getCell(grid, x, y + 1) != LAVA && getCell(grid, x, y + 1) != LAVA_QUEUE) {
-        if (getCell(grid, x + 1, y) <= 0) setCell(nextGrid, x + 1, y, LAVA);
-        if (getCell(grid, x - 1, y) <= 0) setCell(nextGrid, x - 1, y, LAVA);
-    }
-
-    /*
-
-    if (getCell(grid, x, y + 1) != LAVA) {
-        if ((countNeighbor(grid, LAVA, x, y) < 2) && countNeighbor(grid, STONE, x, y) < 2 && getCell(grid, x, y - 1) !=
-            LAVA) setCell(nextGrid, x, y, -1);
-        if (getCell(grid, x, y + 1) == VOID) setCell(nextGrid, x, y + 1, LAVA);
-        else {
-            if (getCell(grid, x + 1, y) <= 0) setCell(nextGrid, x + 1, y, LAVA);
-            if (getCell(grid, x - 1, y) <= 0) setCell(nextGrid, x - 1, y, LAVA);
-        }
-    }
-
-    */
+void nextLiquidGeneration(struct Grid grid, struct Grid nextGrid, int x, int y) {
+    generateLiquid(LAVA, LAVA_SOURCE, grid, nextGrid, x, y);
+    generateLiquid(WATER, WATER_SOURCE, grid, nextGrid, x, y);
 }
 
-void updateTick(struct Grid grid, double *lastTime, double tickTime) {
-    if (GetTime() - *lastTime >= tickTime) {
+void nextOceanGeneration(struct Grid grid, struct Grid nextGrid, int x, int y) {
+    if (getCell(grid, x, y) == VOID) {
+        if (getCell(grid, x, y-1) == WATER_SOURCE) setCell(nextGrid, x, y, WATER_SOURCE);
+        else {
+            if (getCell(grid, x-1, y) == WATER_SOURCE && getCell(grid, x-1, y+1) != VOID)
+                setCell(nextGrid, x, y, WATER_SOURCE);
+            if (getCell(grid, x+1, y) == WATER_SOURCE && getCell(grid, x+1, y+1) != VOID)
+                setCell(nextGrid, x, y, WATER_SOURCE);
+        }
+    }
+}
+
+void updateTick(struct Grid grid, double *lastTime, double tickTime, int start) {
+
+    if (start == 1 || (GetTime() - *lastTime >= tickTime)) {
+
         struct Grid nextGrid = createGrid(grid.width, grid.height);
         for (int i = 0; i < grid.height; ++i) {
             for (int j = 0; j < grid.width; ++j) {
                 int cell = getCell(grid, j, i);
 
-                if (cell == VINE) nextVineGeneration(grid, nextGrid, j, i);
-                else if (cell == LAVA || cell == VOID) nextWaterGeneration(grid, nextGrid, j, i);
-                if (cell == WIRE_HEAD) setCell(nextGrid, j, i, WIRE_QUEUE);
-                else if (cell == WIRE_QUEUE) setCell(nextGrid, j, i, WIRE);
-                else if (cell == WIRE) {
-                    int heads = countNeighbor(grid, WIRE_HEAD, j, i);
-                    if (heads == 1 || heads == 2) setCell(nextGrid, j, i, WIRE_HEAD);
-                    else setCell(nextGrid, j, i, WIRE);
+                if (start == 1) {
+                    if (cell==VOID) nextOceanGeneration(grid, nextGrid, j, i);
+                }
+                else {
+                    if (cell == VINE) nextVineGeneration(grid, nextGrid, j, i);
+                    else if (blocks[cell].state == LIQUID || cell == VOID) nextLiquidGeneration(grid, nextGrid, j, i);
+
+                    if (cell == WIRE_HEAD) setCell(nextGrid, j, i, WIRE_QUEUE);
+                    else if (cell == WIRE_QUEUE) setCell(nextGrid, j, i, WIRE);
+                    else if (cell == WIRE) {
+                        int heads = countNeighbor(grid, WIRE_HEAD, j, i);
+                        if (heads == 1 || heads == 2) setCell(nextGrid, j, i, WIRE_HEAD);
+                        else setCell(nextGrid, j, i, WIRE);
+                    }
                 }
             }
         }
@@ -184,7 +149,8 @@ void updateTick(struct Grid grid, double *lastTime, double tickTime) {
             for (int j = 0; j < grid.width; ++j) {
                 if (getCell(nextGrid, j, i) == VINE) setCell(grid, j, i, VINE);
                 else if (getCell(nextGrid, j, i) == LAVA) setCell(grid, j, i, LAVA);
-                else if (getCell(nextGrid, j, i) == LAVA_QUEUE) setCell(grid, j, i, LAVA_QUEUE);
+                else if (getCell(nextGrid, j, i) == WATER) setCell(grid, j, i, WATER);
+                else if (getCell(nextGrid, j, i) == WATER_SOURCE) setCell(grid, j, i, WATER_SOURCE);
                 else if (getCell(nextGrid, j, i) == WIRE) setCell(grid, j, i, WIRE);
                 else if (getCell(nextGrid, j, i) == WIRE_HEAD) setCell(grid, j, i, WIRE_HEAD);
                 else if (getCell(nextGrid, j, i) == WIRE_QUEUE) setCell(grid, j, i, WIRE_QUEUE);
@@ -192,7 +158,8 @@ void updateTick(struct Grid grid, double *lastTime, double tickTime) {
             }
         }
         free(nextGrid.list);
-        *lastTime = GetTime();
+
+        if (start == 0) *lastTime = GetTime();
     }
 }
 
@@ -220,13 +187,13 @@ void caveDecoration(struct Grid grid) {
     generateVine(grid);
     generateChest(grid);
 
-    randomGeneration(grid, 0.005, LAVA_HEAD, 0, 0);
+    randomGeneration(grid, 0.005, LAVA_SOURCE, 0, 0);
 }
 
 void cleanLava(struct Grid grid) {
     for (int i = 0; i < grid.height; ++i) {
         for (int j = 0; j < grid.width; ++j) {
-            if (getCell(grid, j, i) == LAVA_HEAD && countNeighbor(grid, STONE, j, i) < 1)
+            if (getCell(grid, j, i) == LAVA_SOURCE && countNeighbor(grid, STONE, j, i) < 1)
                 setCell(grid, j, i, VOID);
         }
     }
