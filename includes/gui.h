@@ -10,5 +10,6 @@
 void showInventory(Inventory inventory);
 void guiControl();
 void guiUpdate(struct Player player);
+void displayLoadingScreen(char* message);
 
 #endif

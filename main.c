@@ -22,7 +22,7 @@ int main() {
     srand(seed);
 
     struct Grid grid = createGrid(WIDTH, HEIGHT);
-    generateLand(grid, 10);
+    generateLand(grid, 25);
 
     const int screenWidth = 40 * blockSize;
     const int screenHeight = 20 * blockSize;
@@ -53,6 +53,8 @@ int main() {
 
     double lastTime2 = GetTime();
 
+    int loading = 0;
+
     while (!WindowShouldClose())
     {
         BeginDrawing();
@@ -80,6 +82,7 @@ int main() {
         displayPlayer(player);
         displayHidbox(monster.entity, YELLOW);
         displayGrid(grid, (float) blockSize, camera);
+
         playerUpdate(grid, &player, blockSize, 3000, GetFrameTime(), camera);
         slimeUpdate(grid, &monster, player, blockSize, 3000, GetFrameTime());
 

@@ -39,3 +39,8 @@ void guiControl() {
 void guiUpdate(struct Player player) {
     if (currentGui == INVENTORYGUI) showInventory(player.inventory);
 }
+
+void displayLoadingScreen(char* message) {
+    ClearBackground(BLACK);
+    DrawText(TextFormat(message), 100, 20, 20, WHITE);
+}

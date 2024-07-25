@@ -82,7 +82,7 @@ void nextCellularAutomataGeneration(struct Grid grid, int livingValue, int deadV
         for (int j = 0; j < grid.width; ++j) {
             int neighbors = getCell(neighborsGrid, j, i);
             if (neighbors < 4 && getCell(grid, j, i) == livingValue) setCell(grid, j, i, deadValue);
-            else if (neighbors >= 5 && getCell(grid, j, i) == deadValue) setCell(grid, j, i, livingValue);
+            else if (neighbors > 4 && getCell(grid, j, i) == deadValue) setCell(grid, j, i, livingValue);
         }
     }
     free(neighborsGrid.list);
@@ -155,7 +155,7 @@ Vector2 getBlockPosCliqued(Camera2D camera, int blockSize) {
 }
 
 void gridEdit(struct Grid grid, Camera2D camera, int blockSize, Inventory* inventory) {
-    if (IsKeyPressed(KEY_SPACE)) generateLand(grid, 25);
+    //if (IsKeyPressed(KEY_SPACE)) generateLand(grid, 25);
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
         Vector2 blockPos = getBlockPosCliqued(camera, blockSize);
         addItemInventory(inventory, items[getCell(grid, blockPos.x, blockPos.y)]);
@@ -163,6 +163,7 @@ void gridEdit(struct Grid grid, Camera2D camera, int blockSize, Inventory* inven
     }
     if (IsMouseButtonDown(MOUSE_RIGHT_BUTTON)) {
         Vector2 blockPos = getBlockPosCliqued(camera, blockSize);
+        // bug ici
         if (getCell(grid, blockPos.x, blockPos.y) != getSelectedItemId(*inventory) && getSelectedItemId(*inventory) != 0) {
             removeItemInventory(inventory, items[getSelectedItemId(*inventory)]);
             setCell(grid, (int) blockPos.x, (int) blockPos.y, getSelectedItemId(*inventory));

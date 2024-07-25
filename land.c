@@ -130,7 +130,7 @@ void generateLand(struct Grid grid, int max_step) {
 
     generateSand(grid);
     generateDirt(grid, 0, SAND, 4, DIRT);
-    
+
     treeGeneration(grid);
     free(altitude);
 }
